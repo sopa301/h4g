@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
 
 // constant declarations for encryption
+const jwtSecret = process.env.SECRET;
 const algorithm = "aes-256-cbc";
 const initVector = Buffer.from("7d3039e7f8a32ff9d12d5802290532df", "hex");
 const Securitykey = Buffer.from(
@@ -89,7 +90,7 @@ const validateUser = async (req, res, next) => {
     if (dbToken !== token) {
       throw new Error("Invalid token");
     }
-    jwt.verify(token, "purpledoggonotpinkcatnotbrownfox");
+    verifyToken(token);
     return res.status(201).json({ success: "Token authenticated!" });
   } catch (err) {
     return res.status(401).send("Invalid Token. Please log in again.");
@@ -98,9 +99,13 @@ const validateUser = async (req, res, next) => {
 module.exports = { signupUser, loginUser, validateUser };
 
 const createToken = (_id) => {
-  return jwt.sign({ _id }, "purpledoggonotpinkcatnotbrownfox", {
+  return jwt.sign({ _id }, jwtSecret, {
     expiresIn: "1d",
   });
+};
+
+const verifyToken = (token) => {
+  jwt.verify(token, jwtSecret);
 };
 
 const updateUserToken = async (userId, token) => {
