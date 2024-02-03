@@ -2,6 +2,7 @@ require("dotenv").config();
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
+const { makeObjectId } = require("../db/functions");
 
 // constant declarations for encryption
 const tokenDuration = process.env.TOKEN_DURATION;
@@ -63,12 +64,13 @@ const loginUser = async (req, res, next) => {
       return res.status(403).json({ error: "password incorrect" });
     }
     console.log("success!");
-    const token = createToken(existingUser.id);
-    await updateUserToken(existingUser.id, token);
+    const userId = existingUser.id.toString();
+    const token = createToken(userId);
+    await updateUserToken(userId, token);
     return res.status(201).json({
       success: "login success!",
       token: token,
-      userId: existingUser.id,
+      userId: userId,
     });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -82,7 +84,7 @@ const validateUser = async (req, res, next) => {
   }
   try {
     const existingUser = await User.findOne({
-      where: { id: userId },
+      _id: makeObjectId(userId),
     });
     if (existingUser === null) {
       return res.status(404).json({ error: "User not found" });
@@ -114,7 +116,7 @@ function verifyToken(token) {
 }
 
 async function updateUserToken(userId, token) {
-  await User.updateOne({ userId: userId }, { token: token });
+  await User.updateOne({ _id: makeObjectId(userId) }, { token: token });
 }
 
 function encryptPassword(password) {
