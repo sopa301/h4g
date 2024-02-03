@@ -4,8 +4,6 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./util/database");
-const createAssociations = require("./models/association");
 
 /**
  * Import function triggers from their respective submodules:
