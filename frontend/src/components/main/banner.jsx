@@ -21,17 +21,18 @@ export default function Banner(props) {
   return (
     <Flex
       size="2xl"
-      backgroundColor="#0CC0DF"
+      backgroundColor="#FF4F4B"
       paddingX="10px"
       paddingY="15px"
       textColor="white"
     >
       <Heading
         font="sans-serif"
+        pl={20}
         // color="#CB6CE6"
         // color="black"
       >
-        The Purple Dog Project
+        Big At Heart
       </Heading>
       {props.loggedIn ? <Nav /> : <Box />}
       <Spacer />

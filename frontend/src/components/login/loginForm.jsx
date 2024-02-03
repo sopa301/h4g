@@ -71,7 +71,7 @@ export default function LoginForm(props) {
                 isInvalid={form.errors.username && form.touched.username}
               >
                 <FormLabel>Username</FormLabel>
-                <Input {...field} placeholder="username" />
+                <Input {...field} placeholder="username"/>
                 <FormErrorMessage>{form.errors.username}</FormErrorMessage>
               </FormControl>
             )}
@@ -80,6 +80,7 @@ export default function LoginForm(props) {
             {({ field, form }) => (
               <FormControl
                 isInvalid={form.errors.password && form.touched.password}
+                pt='10px'
               >
                 <FormLabel>Password</FormLabel>
                 <InputGroup size="md">
@@ -100,8 +101,7 @@ export default function LoginForm(props) {
           </Field>
           <Button
             mt={4}
-            backgroundColor="#CB6CE6"
-            color="white"
+            colorScheme="teal"
             isLoading={props.isSubmitting}
             type="submit"
           >
