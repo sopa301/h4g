@@ -24,7 +24,7 @@ function validateToken(token, navFn, personId, personName, toastFn) {
   if (token && personName && personId) {
     return axios
       .post(import.meta.env.VITE_API_URL + "/validate", {
-        personId: personId,
+        userId: personId,
         token: token,
       })
       .catch(function (error) {

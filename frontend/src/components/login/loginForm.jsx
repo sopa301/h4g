@@ -37,13 +37,13 @@ export default function LoginForm(props) {
   async function handleLogin(values, actions) {
     await axios
       .post(import.meta.env.VITE_API_URL + "/login", {
-        personName: values.username,
+        username: values.username,
         password: values.password,
       })
       .then(function (response) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("personName", values.username);
-        localStorage.setItem("personId", response.data.personId);
+        localStorage.setItem("personId", response.data.userId);
         navigate("/projects");
       })
       .catch(function (error) {

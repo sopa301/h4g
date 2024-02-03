@@ -107,10 +107,9 @@ export default function SignUpComponent() {
       <Box>
         <Heading pb='10px'>Sign Up as a Volunteer</Heading>
         <Formik
-          initialValues={{ username: "", password: "", password2: "" }}
+          initialValues={{ username: "", password: "", password2: "", email:"", telegram: ""}}
           onSubmit={(values, actions) => {
-            signUpFunction(values.username, values.password, values.email, values.telegram,
-            values.startDate, values.endDate).then((result) => {
+            signUpFunction(values.username, values.password, values.email, values.telegram).then((result) => {
               actions.setSubmitting(result);
               if (result) {
                 navigate("/login");
