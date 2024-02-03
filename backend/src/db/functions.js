@@ -19,7 +19,7 @@ function makeObjectId(id) {
 /**
  * Connects the app to the database server.
  */
-export async function connectToDatabase() {
+async function connectToDatabase() {
   const dbUri = process.env.MONGODB_URI;
   if (!dbUri) {
     throw new Error("Please define the MONGODB_URI environment variable");
@@ -29,3 +29,5 @@ export async function connectToDatabase() {
   });
   console.log("Connected to database");
 }
+
+module.exports = { connectToDatabase, makeObjectId };

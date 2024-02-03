@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
 
 // constant declarations for encryption
+const tokenDuration = process.env.TOKEN_DURATION;
 const jwtSecret = process.env.SECRET;
 const algorithm = "aes-256-cbc";
 const initVector = Buffer.from("7d3039e7f8a32ff9d12d5802290532df", "hex");
@@ -33,7 +34,7 @@ const signupUser = async (req, res, next) => {
       availability: [],
       isAdmin: false,
       passwordHash: encryptedPassword,
-      token: "",
+      token: "none",
     });
     return res.status(201).json({ success: "success" });
   } catch (err) {
@@ -62,12 +63,12 @@ const loginUser = async (req, res, next) => {
       return res.status(403).json({ error: "password incorrect" });
     }
     console.log("success!");
-    const token = createToken(existingUser.userId.toString());
-    await updateUserToken(existingUser.userId, token);
+    const token = createToken(existingUser.id);
+    await updateUserToken(existingUser.id, token);
     return res.status(201).json({
       success: "login success!",
       token: token,
-      userId: existingUser.userId,
+      userId: existingUser.id,
     });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -81,8 +82,11 @@ const validateUser = async (req, res, next) => {
   }
   try {
     const existingUser = await User.findOne({
-      where: { userId: userId },
+      where: { id: userId },
     });
+    if (existingUser === null) {
+      return res.status(404).json({ error: "User not found" });
+    }
     const dbToken = existingUser.token;
     if (!dbToken) {
       return res.status(404).json({ error: "Timeout error" });
@@ -93,24 +97,25 @@ const validateUser = async (req, res, next) => {
     verifyToken(token);
     return res.status(201).json({ success: "Token authenticated!" });
   } catch (err) {
+    console.log(err);
     return res.status(401).send("Invalid Token. Please log in again.");
   }
 };
 module.exports = { signupUser, loginUser, validateUser };
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, jwtSecret, {
-    expiresIn: "1d",
+function createToken(id) {
+  return jwt.sign({ id }, jwtSecret, {
+    expiresIn: tokenDuration,
   });
-};
+}
 
-const verifyToken = (token) => {
+function verifyToken(token) {
   jwt.verify(token, jwtSecret);
-};
+}
 
-const updateUserToken = async (userId, token) => {
+async function updateUserToken(userId, token) {
   await User.updateOne({ userId: userId }, { token: token });
-};
+}
 
 function encryptPassword(password) {
   const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
