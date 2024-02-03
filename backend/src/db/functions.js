@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-
-import { ObjectId } from "mongodb";
-import {} from "dotenv/config";
+const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Creates an ObjectId from a string according to the MongoDB documentation.
@@ -9,7 +9,7 @@ import {} from "dotenv/config";
  * @param id - id to be converted to ObjectId
  * @returns ObjectId
  */
-function makeObjectId(id: string) {
+function makeObjectId(id) {
   if (!ObjectId.isValid(id)) {
     throw new Error("Invalid project id: " + id);
   }
