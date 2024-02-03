@@ -49,18 +49,5 @@ app.use(projManagementRoutes);
 app.use(runAlgoRoutes);
 app.use(taskManagementRoutes);
 
-// Creating connection to listen for HTTP requests
-sequelize
-  .sync({ force: false })
-  .then((result) => {
-    console.log("Database and tables updated!");
-  })
-  .then(() => {
-    app.listen(4000);
-  })
-  .then(() => {
-    console.log("Example app listening at http://localhost:4000");
-  });
-
 // for firebase
 // exports.app = functions.https.onRequest(app);
