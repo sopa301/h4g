@@ -1,4 +1,4 @@
-import { Grid, GridItem, Box, Image, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Banner from "../components/main/banner";
 import { Outlet } from "react-router-dom";
 
@@ -7,18 +7,11 @@ export default function Login() {
     <Box>
       <Banner loggedIn={false} />
       <Box>
-        <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-          <GridItem colSpan={3}>
-            <Flex justify="center">
-              <Box paddingTop="50px">
-                <Outlet />
-              </Box>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Image src="/loginpageimage.png" />
-          </GridItem>
-        </Grid>
+        <Flex justify="center">
+          <Box paddingTop="50px">
+            <Outlet />
+          </Box>
+        </Flex>
       </Box>
     </Box>
   );
