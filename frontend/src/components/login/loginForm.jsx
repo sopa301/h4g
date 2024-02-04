@@ -44,7 +44,7 @@ export default function LoginForm(props) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("personName", values.username);
         localStorage.setItem("personId", response.data.userId);
-        navigate("/projects");
+        navigate("/dashboard");
       })
       .catch(function (error) {
         actions.setSubmitting(false);

@@ -5,10 +5,10 @@ export default function Nav(props) {
   return (
     <Stack paddingLeft="30px" alignItems="end" direction={"row"}>
       <Box paddingX="5px" fontWeight="bold">
-        <Link to="./tasks">My Tasks</Link>
+        <Link to="./dashboard">Dashboard</Link>
       </Box>
       <Box paddingX="5px" fontWeight="bold">
-        <Link to="./projects">All Projects</Link>
+        <Link to="./settings">Settings</Link>
       </Box>
     </Stack>
   );
