@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Spacer, Flex } from "@chakra-ui/react";
+import { Box, Button, Heading, Spacer, Flex, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import Nav from "./nav";
 
@@ -21,7 +21,7 @@ export default function Banner(props) {
   return (
     <Flex
       size="2xl"
-      backgroundColor="#ff4c4c"
+      backgroundColor="blue.400"
       paddingX="10px"
       paddingY="15px"
       textColor="white"
@@ -36,6 +36,19 @@ export default function Banner(props) {
       </Heading>
       {props.loggedIn ? <Nav /> : <Box />}
       <Spacer />
+      {props.loggedIn ? (
+        <Text
+          as='b'
+          fontSize='md'
+          font='sans-serif'
+          pt='2'
+          pr='8'
+        >
+          Welcome, {localStorage.getItem("personName")}!
+        </Text> 
+      ) : ( 
+        <Box />
+      )}
       {props.loggedIn ? (
         <Button
           onClick={handleLogout}
