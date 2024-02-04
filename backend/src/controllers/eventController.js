@@ -16,15 +16,12 @@ const PUTEvent = async (req, res, next) => {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.create({
-      userId: userId,
       eventName: eventName,
       eventDate: eventDate,
       eventDesc: eventDesc,
       eventImg: eventImg,
     });
-    return res
-      .status(201)
-      .json({ success: "success", eventId: event._id.toString() });
+    return res.status(201).json({ eventId: event._id.toString() });
   } catch (err) {
     return res.status(401).json({ error: err });
   }
@@ -41,12 +38,11 @@ const POSTEvent = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const event = await Event.findOne({ _id: makeObjectId(eventId) });
+    const event = await Event.findOne({ _id: eventId });
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
     return res.status(201).json({
-      success: "success",
       eventId: eventId,
       eventName: event.eventName,
       eventDate: event.eventDate,
@@ -70,7 +66,7 @@ const PATCHEvent = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const event = await Event.findOne({ _id: makeObjectId(eventId) });
+    const event = await Event.findOne({ _id: eventId });
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
@@ -104,13 +100,10 @@ const DELETEEvent = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const event = await Event.findOne({ _id: makeObjectId(eventId) });
-    if (event === null) {
-      return res.status(404).json({ error: "event not found" });
-    }
-    await event.delete();
+    await Event.deleteOne({ _id: eventId });
     return res.status(201).json({ success: "success" });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };

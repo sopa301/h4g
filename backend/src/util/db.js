@@ -1,10 +1,12 @@
+const User = require("../db/schema/User");
+
 async function isExistingUser(username) {
-  const existingUser = await getUser(username);
+  const existingUser = await getUserByName(username);
   return existingUser != null;
 }
 
-async function getUser(userId) {
-  return await User.findOne({ _id: makeObjectId(userId) }).exec();
+async function getUserByName(username) {
+  return await User.findOne({ username: username }).exec();
 }
 
-module.exports = { isExistingUser, getUser };
+module.exports = { isExistingUser, getUser: getUserByName };

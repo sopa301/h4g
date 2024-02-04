@@ -2,8 +2,7 @@ require("dotenv").config();
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
-const { makeObjectId } = require("../db/functions");
-const { isExistingUser, getUser } = require("../util/db");
+const { isExistingUser, getUserByName } = require("../util/db");
 
 // constant declarations for encryption
 const tokenDuration = process.env.TOKEN_DURATION;
@@ -39,6 +38,7 @@ const signupUser = async (req, res, next) => {
     });
     return res.status(201).json({ success: "success" });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
@@ -52,7 +52,7 @@ const loginUser = async (req, res, next) => {
   }
   const encryptedPassword = encryptPassword(password);
   try {
-    const existingUser = await getUser(username);
+    const existingUser = await getUserByName(username);
     if (existingUser === null) {
       console.log("login failed: username not found");
       return res.status(404).json({ error: "username not found" });
@@ -62,7 +62,7 @@ const loginUser = async (req, res, next) => {
       return res.status(403).json({ error: "password incorrect" });
     }
     console.log("success!");
-    const userId = existingUser.id.toString();
+    const userId = existingUser._id.toString();
     const token = createToken(userId);
     await updateUserToken(userId, token);
     return res.status(201).json({
@@ -71,6 +71,7 @@ const loginUser = async (req, res, next) => {
       userId: userId,
     });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
@@ -81,7 +82,7 @@ const validateUser = async (req, res, next) => {
     return res.status(403).send("A token is required for authentication");
   }
   try {
-    const existingUser = await getUser(userId);
+    const existingUser = await getUserById(userId);
     if (existingUser === null) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -112,10 +113,14 @@ function verifyToken(token) {
 }
 
 async function updateUserToken(userId, token) {
-  await User.updateOne({ _id: makeObjectId(userId) }, { token: token });
+  await User.updateOne({ _id: userId }, { token: token });
 }
 
 function encryptPassword(password) {
   const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
   return cipher.update(password, "utf-8", "hex") + cipher.final("hex");
+}
+
+async function getUserById(userId) {
+  return await User.findOne({ _id: userId }).exec();
 }

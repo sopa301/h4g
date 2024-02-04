@@ -11,7 +11,7 @@ dotenv.config();
  */
 function makeObjectId(id) {
   if (!ObjectId.isValid(id)) {
-    throw new Error("Invalid project id: " + id);
+    throw new Error("Invalid Object id: " + id);
   }
   return ObjectId.createFromTime(id);
 }
