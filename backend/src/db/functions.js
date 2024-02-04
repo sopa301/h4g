@@ -13,7 +13,7 @@ function makeObjectId(id) {
   if (!ObjectId.isValid(id)) {
     throw new Error("Invalid project id: " + id);
   }
-  return new ObjectId(id);
+  return ObjectId.createFromTime(id);
 }
 
 /**

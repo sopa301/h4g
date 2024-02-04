@@ -52,9 +52,7 @@ const loginUser = async (req, res, next) => {
   }
   const encryptedPassword = encryptPassword(password);
   try {
-    const existingUser = await User.findOne({
-      username: username,
-    });
+    const existingUser = await getUser(username);
     if (existingUser === null) {
       console.log("login failed: username not found");
       return res.status(404).json({ error: "username not found" });
@@ -83,9 +81,7 @@ const validateUser = async (req, res, next) => {
     return res.status(403).send("A token is required for authentication");
   }
   try {
-    const existingUser = await User.findOne({
-      _id: makeObjectId(userId),
-    });
+    const existingUser = await getUser(userId);
     if (existingUser === null) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -125,8 +121,10 @@ function encryptPassword(password) {
 }
 
 async function isExistingUser(username) {
-  const existingUser = await User.findOne({
-    username: username,
-  }).exec();
+  const existingUser = await getUser(username);
   return existingUser != null;
+}
+
+async function getUser(userId) {
+  return await User.findOne({ _id: makeObjectId(userId) }).exec();
 }
