@@ -25,6 +25,8 @@ import ProjectPage, {
 } from "./components/projects/projectPage";
 import Home from "./routes/home";
 import Tasks from "./routes/tasks";
+import Dashboard from "./routes/dashboard";
+import Update from "./routes/update";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
 
 const chakraTheme = chakraExtendTheme();
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path: "/tasks",
         element: <Tasks />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/update",
+        element: <Update />,
       },
       {
         path: "/projects",

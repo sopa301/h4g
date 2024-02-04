@@ -21,7 +21,7 @@ export default function Banner(props) {
   return (
     <Flex
       size="2xl"
-      backgroundColor="#FF4F4B"
+      backgroundColor="#ff4c4c"
       paddingX="10px"
       paddingY="15px"
       textColor="white"
