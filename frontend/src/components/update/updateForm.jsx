@@ -4,17 +4,27 @@ import {
   FormLabel,
   FormErrorMessage,
   Button,
+  Box
 } from "@chakra-ui/react";
 import { Container, Input, Textarea } from '@chakra-ui/react';
 import { Field, Form, Formik } from "formik";
-import { DateTimeField } from "@mui/x-date-pickers";
-import { Interval } from "luxon";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { DateTime } from "luxon"
+import axios from 'axios';
 
 function UpdateForm() {
-  async function updateEvent() {
-
+  async function updateEvent(eventName, eventDesc, eventImg, eventDate) {
+    return await axios
+    .put(import.meta.env.VITE_API_URL + "/event", {
+      userId: localStorage.getItem("personId"),
+      eventName: eventName,
+      eventDate: eventDate, 
+      eventDesc: eventDesc,
+      eventImg: eventImg
+    }).catch(error => console.log(error))
   }
 
+  console.log(localStorage.getItem("personId"))
   function validateEventName(value) {
     let error;
     if (!value) {
@@ -35,8 +45,8 @@ function UpdateForm() {
   return (
     <Container>
       <Formik
-        initialValues={{ eventName: "", eventDesc: "", eventImg: "", eventDate:""}}
-        onSubmit={updateEvent}
+        initialValues={{ eventName: "", eventDesc: "", eventImg: "", eventDate: DateTime.local()}}
+        onSubmit={(values, actions) => updateEvent(values.eventName, values.eventDesc, values.eventImg, values.eventDate)}
       >
         {(formik) => (
           <Form>
@@ -73,24 +83,20 @@ function UpdateForm() {
                   </FormControl>
                 )}
             </Field>
-            {/* <Field name="eventDate">
-              {({ field, form }) => (
-                <FormControl isInvalid={formik.errors.interval}>
+            <Field name="eventDate">
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.eventDate && form.touched.eventDate}
+                  >
                   <FormLabel>Event Date</FormLabel>
-                  <DateTimeField
-                    format="dd/MM/yyyy hh:mm a"
-                    onChange={(val) => {
-                      formik.setFieldValue("eventDate", val, true);
-                    }}
-                    value={formik.values.eventDate}
-                    label="Event Date Time"
-                  />
-                  <FormErrorMessage>
-                    {formik.errors.interval}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field> */}
+                  <DateTimePicker 
+                    value={formik.values.eventDate} 
+                    onChange={(val) => formik.setFieldValue("eventDate", val, true)}
+                    label="date time"
+                    />
+                  </FormControl>
+                )}
+            </Field>
             <Button
               mt={4}
               colorScheme="teal"
