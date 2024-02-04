@@ -9,4 +9,4 @@ async function getUserByName(username) {
   return await User.findOne({ username: username }).exec();
 }
 
-module.exports = { isExistingUser, getUser: getUserByName };
+module.exports = { isExistingUser, getUserByName };
