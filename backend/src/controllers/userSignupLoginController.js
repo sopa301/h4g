@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
 const { makeObjectId } = require("../db/functions");
+const { isExistingUser, getUser } = require("../util/db");
 
 // constant declarations for encryption
 const tokenDuration = process.env.TOKEN_DURATION;
@@ -17,10 +18,9 @@ const Securitykey = Buffer.from(
 
 const signupUser = async (req, res, next) => {
   const { username, email, teleHandle, password } = req.body;
-  if (!(username && email && teleHandle && password)) {
+  if (!(username && email && password)) {
     return res.status(403).json({
-      error:
-        "Username, email, teleHandle and password is required for signing up",
+      error: "Username, email and password is required for signing up",
     });
   }
   const encryptedPassword = encryptPassword(password);
@@ -118,13 +118,4 @@ async function updateUserToken(userId, token) {
 function encryptPassword(password) {
   const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
   return cipher.update(password, "utf-8", "hex") + cipher.final("hex");
-}
-
-async function isExistingUser(username) {
-  const existingUser = await getUser(username);
-  return existingUser != null;
-}
-
-async function getUser(userId) {
-  return await User.findOne({ _id: makeObjectId(userId) }).exec();
 }

@@ -8,11 +8,7 @@ const { connectToDatabase } = require("./src/db/functions");
 
 // import routes
 const loginSignupRoutes = require("./src/routes/loginsignup");
-// const myTasksRoutes = require("./src/routes/mytasks");
-// const personAvailRoutes = require("./src/routes/personavail");
-// const projManagementRoutes = require("./src/routes/projmanagement");
-// const runAlgoRoutes = require("./src/routes/runalgo");
-// const taskManagementRoutes = require("./src/routes/taskmanagement");
+const eventRoutes = require("./src/routes/event");
 
 const app = express();
 
@@ -23,11 +19,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // use routes
 app.use(loginSignupRoutes);
-// app.use(myTasksRoutes);
-// app.use(personAvailRoutes);
-// app.use(projManagementRoutes);
-// app.use(runAlgoRoutes);
-// app.use(taskManagementRoutes);
+app.use(eventRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Backend is running at port ${process.env.PORT}!`);
