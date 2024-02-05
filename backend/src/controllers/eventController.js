@@ -131,7 +131,7 @@ const POSTGetEvents = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const events = await Event.find({}, { attendees: 0 });
+    const events = await Event.find({}, { attendees: 0, __v: 0 });
     events.forEach((event) => {
       event.eventId = event._id.toString();
     });
