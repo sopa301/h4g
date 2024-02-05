@@ -20,6 +20,7 @@ const PUTEvent = async (req, res, next) => {
       eventDate: eventDate,
       eventDesc: eventDesc,
       eventImg: eventImg,
+      attendees: [],
     });
     return res.status(201).json({ eventId: event._id.toString() });
   } catch (err) {
@@ -48,6 +49,7 @@ const POSTEvent = async (req, res, next) => {
       eventDate: event.eventDate,
       eventDesc: event.eventDesc,
       eventImg: event.eventImg,
+      attendees: event.attendees,
     });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -55,8 +57,15 @@ const POSTEvent = async (req, res, next) => {
 };
 
 const PATCHEvent = async (req, res, next) => {
-  const { userId, eventId, eventName, eventDate, eventDesc, eventImg } =
-    req.body;
+  const {
+    userId,
+    eventId,
+    eventName,
+    eventDate,
+    eventDesc,
+    eventImg,
+    attendees,
+  } = req.body;
   if (!(userId && eventId)) {
     return res.status(403).json({
       error: "userId, eventId is required for updating event",
@@ -81,6 +90,9 @@ const PATCHEvent = async (req, res, next) => {
     }
     if (eventImg) {
       event.eventImg = eventImg;
+    }
+    if (attendees) {
+      event.attendees = attendees;
     }
     await event.save();
     return res.status(201).json({ success: "success" });
@@ -108,11 +120,57 @@ const DELETEEvent = async (req, res, next) => {
   }
 };
 
+const POSTGetEvents = async (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId) {
+    return res.status(403).json({
+      error: "userId is required for getting events",
+    });
+  }
+  try {
+    if (!isValidUser(userId)) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const events = await Event.find({}, { attendees: 0 });
+    events.forEach((event) => {
+      event.eventId = event._id.toString();
+    });
+    return res.status(201).json({ events: events });
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+};
+
+const POSTRegisterEvent = async (req, res, next) => {
+  const { userId, eventId } = req.body;
+  if (!(userId && eventId)) {
+    return res.status(403).json({
+      error: "userId, eventId is required for registering event",
+    });
+  }
+  try {
+    if (!isValidUser(userId)) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const event = await Event.findOne({ _id: eventId });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    event.attendees.push(userId);
+    await event.save();
+    return res.status(201).json({ success: "success" });
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+};
+
 module.exports = {
   PUTEvent,
   POSTEvent,
   DELETEEvent,
   PATCHEvent,
+  POSTGetEvents,
+  POSTRegisterEvent,
 };
 
 function isValidUser(userId) {

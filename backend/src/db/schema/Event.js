@@ -6,6 +6,7 @@ const eventSchema = new mongoose.Schema({
   eventDate: { type: Date, required: true },
   eventDesc: { type: String, required: true },
   eventImg: { type: String, required: true },
+  attendees: { type: [String], required: true },
 });
 
 // 3. Create a Model.

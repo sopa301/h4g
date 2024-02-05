@@ -4,6 +4,8 @@ const {
   POSTEvent,
   PATCHEvent,
   DELETEEvent,
+  POSTGetEvents,
+  POSTRegisterEvent,
 } = require("../controllers/eventController");
 
 const router = express.Router();
@@ -15,5 +17,9 @@ router.post("/event", POSTEvent);
 router.patch("/event", PATCHEvent);
 
 router.delete("/event", DELETEEvent);
+
+router.post("/getEvents", POSTGetEvents);
+
+router.post("/registerEvent", POSTRegisterEvent);
 
 module.exports = router;
