@@ -95,7 +95,9 @@ const validateUser = async (req, res, next) => {
       throw new Error("Invalid token");
     }
     verifyToken(token);
-    return res.status(201).json({ success: "Token authenticated!" });
+    return res
+      .status(201)
+      .json({ success: "Token authenticated!", isAdmin: existingUser.isAdmin });
   } catch (err) {
     console.log(err);
     return res.status(401).send("Invalid Token. Please log in again.");
