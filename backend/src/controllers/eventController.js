@@ -156,6 +156,9 @@ const POSTRegisterEvent = async (req, res, next) => {
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
+    if (event.attendees.includes(userId)) {
+      return res.status(403).json({ error: "user already registered" });
+    }
     event.attendees.push(userId);
     await event.save();
     return res.status(201).json({ success: "success" });

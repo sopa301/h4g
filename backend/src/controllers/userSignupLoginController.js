@@ -69,6 +69,7 @@ const loginUser = async (req, res, next) => {
       success: "login success!",
       token: token,
       userId: userId,
+      isAdmin: existingUser.isAdmin,
     });
   } catch (err) {
     console.log(err);
