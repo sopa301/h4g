@@ -136,8 +136,13 @@ const POSTGetEvents = async (req, res, next) => {
     }
     let events = await Event.find({}, { attendees: 0, __v: 0 });
     events = events.map((event) => {
-      event.eventId = event._id.toString();
-      event._id = undefined;
+      return {
+        eventId: event._id.toString(),
+        eventName: event.eventName,
+        eventDate: event.eventDate,
+        eventDesc: event.eventDesc,
+        eventImg: event.eventImg,
+      };
     });
     return res.status(201).json({ events: events });
   } catch (err) {
@@ -159,9 +164,13 @@ const POSTGetMyEvents = async (req, res, next) => {
     let events = await Event.find({}, { __v: 0 });
     events = events.filter((event) => event.attendees.includes(userId));
     events = events.map((event) => {
-      event.eventId = event._id.toString();
-      event._id = undefined;
-      event.attendees = undefined;
+      return {
+        eventId: event._id.toString(),
+        eventName: event.eventName,
+        eventDate: event.eventDate,
+        eventDesc: event.eventDesc,
+        eventImg: event.eventImg,
+      };
     });
     return res.status(201).json({ events: events });
   } catch (err) {
