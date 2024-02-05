@@ -167,6 +167,32 @@ const POSTRegisterEvent = async (req, res, next) => {
   }
 };
 
+const POSTLeaveEvent = async (req, res, next) => {
+  const { userId, eventId } = req.body;
+  if (!(userId && eventId)) {
+    return res.status(403).json({
+      error: "userId, eventId is required for leaving event",
+    });
+  }
+  try {
+    if (!isValidUser(userId)) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const event = await Event.findOne({ _id: eventId });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    if (!event.attendees.includes(userId)) {
+      return res.status(403).json({ error: "user not registered" });
+    }
+    event.attendees = event.attendees.filter((id) => id !== userId);
+    await event.save();
+    return res.status(201).json({ success: "success" });
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+};
+
 module.exports = {
   PUTEvent,
   POSTEvent,
@@ -174,6 +200,7 @@ module.exports = {
   PATCHEvent,
   POSTGetEvents,
   POSTRegisterEvent,
+  POSTLeaveEvent,
 };
 
 function isValidUser(userId) {

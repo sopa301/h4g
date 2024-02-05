@@ -6,6 +6,7 @@ const {
   DELETEEvent,
   POSTGetEvents,
   POSTRegisterEvent,
+  POSTLeaveEvent,
 } = require("../controllers/eventController");
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.delete("/event", DELETEEvent);
 router.post("/getEvents", POSTGetEvents);
 
 router.post("/registerEvent", POSTRegisterEvent);
+
+router.post("/leaveEvent", POSTLeaveEvent);
 
 module.exports = router;
