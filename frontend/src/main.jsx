@@ -53,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/update",
-        element: <Update />,
+        element: <Update toast={toast}/>,
       },
       {
         path: "/projects",
