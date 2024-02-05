@@ -112,7 +112,10 @@ const DELETEEvent = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    await Event.deleteOne({ _id: eventId });
+    const deleted = await Event.deleteOne({ _id: eventId });
+    if (deleted.deletedCount === 0) {
+      return res.status(404).json({ error: "event not found" });
+    }
     return res.status(201).json({ success: "success" });
   } catch (err) {
     console.log(err);
