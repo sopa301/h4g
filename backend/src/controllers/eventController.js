@@ -134,7 +134,31 @@ const POSTGetEvents = async (req, res, next) => {
     const events = await Event.find({}, { attendees: 0, __v: 0 });
     events.forEach((event) => {
       event.eventId = event._id.toString();
+      event._id = undefined;
     });
+    return res.status(201).json({ events: events });
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+};
+
+const POSTGetMyEvents = async (req, res, next) => {
+  const { userId } = req.body;
+  if (!userId) {
+    return res.status(403).json({
+      error: "userId is required for getting my events",
+    });
+  }
+  try {
+    if (!isValidUser(userId)) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const events = await Event.find({}, { __v: 0 });
+    events.forEach((event) => {
+      event.eventId = event._id.toString();
+      event._id = undefined;
+    });
+    events = events.filter((event) => event.attendees.includes(userId));
     return res.status(201).json({ events: events });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -199,6 +223,7 @@ module.exports = {
   DELETEEvent,
   PATCHEvent,
   POSTGetEvents,
+  POSTGetMyEvents,
   POSTRegisterEvent,
   POSTLeaveEvent,
 };
