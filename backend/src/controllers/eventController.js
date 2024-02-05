@@ -153,7 +153,7 @@ const POSTGetMyEvents = async (req, res, next) => {
     if (!isValidUser(userId)) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const events = await Event.find({}, { __v: 0 });
+    let events = await Event.find({}, { __v: 0 });
     events = events.filter((event) => event.attendees.includes(userId));
     events.forEach((event) => {
       event.eventId = event._id.toString();
@@ -162,6 +162,7 @@ const POSTGetMyEvents = async (req, res, next) => {
     });
     return res.status(201).json({ events: events });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
