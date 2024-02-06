@@ -49,7 +49,6 @@ function UpdateForm(props) {
     })});
   }
 
-  console.log(localStorage.getItem("personId"))
   function validateEventName(value) {
     let error;
     if (!value) {

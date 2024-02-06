@@ -28,6 +28,8 @@ import Tasks from "./routes/tasks";
 import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
+import store from './app/store'
+import { Provider } from 'react-redux'
 
 const chakraTheme = chakraExtendTheme();
 const materialTheme = muiCreateTheme();
@@ -92,12 +94,14 @@ root.render(
   <ChakraProvider theme={chakraTheme} resetCSS>
     {/* <React.StrictMode> */}
     <MaterialThemeProvider theme={{ [THEME_ID]: materialTheme }}>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <ToastContext.Provider value={toast}>
-          <RouterProvider router={router} />
-        </ToastContext.Provider>
-        <ToastContainer />
-      </LocalizationProvider>
+      <Provider store={store}>
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <ToastContext.Provider value={toast}>
+            <RouterProvider router={router} />
+          </ToastContext.Provider>
+          <ToastContainer />
+        </LocalizationProvider>
+      </Provider>
     </MaterialThemeProvider>
     {/* </React.StrictMode> */}
   </ChakraProvider>

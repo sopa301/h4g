@@ -3,14 +3,18 @@ import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import Banner from "../components/main/banner";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updateAdmin } from "../features/admin/adminSlice";
 
 export default function Root(props) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const personName = localStorage.getItem("personName");
   const personId = localStorage.getItem("personId");
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    validateToken(token, navigate, personId, personName, props.toast);
+    validateToken(token, navigate, personId, personName, props.toast, dispatch);
   }, []);
   return (
     <Box>
@@ -20,14 +24,17 @@ export default function Root(props) {
   );
 }
 
-function validateToken(token, navFn, personId, personName, toastFn) {
+function validateToken(token, navFn, personId, personName, toastFn, dispatch) {
   if (token && personName && personId) {
     return axios
       .post(import.meta.env.VITE_API_URL + "/validate", {
         userId: personId,
         token: token,
-      })
-      .catch(function (error) {
+      }).then((response) => {
+        console.log("dispatched");
+        console.log(response.data.isAdmin);
+        dispatch(updateAdmin(response.data.isAdmin))})
+        .catch(function (error) {
         toastFn({
           title: "Please log in again.",
           description: getErrorMessage(error),
