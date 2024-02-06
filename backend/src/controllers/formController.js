@@ -22,6 +22,7 @@ const PUTForm = async (req, res, next) => {
     await Form.create({
       eventId: eventId,
       prompts: prompts,
+      respondees: [],
     });
     return res.status(201).json({});
   } catch (err) {

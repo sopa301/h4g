@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 const formSchema = new mongoose.Schema({
   eventId: { type: String, required: true },
   prompts: { type: [String], required: false },
+  respondees: {
+    type: [{ userId: String, responses: [String] }],
+    required: true,
+  },
 });
 
 // 3. Create a Model.
