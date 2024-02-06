@@ -1,5 +1,6 @@
 import React from 'react'
-import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box, StatUpArrow} from '@chakra-ui/react'
+import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box} from '@chakra-ui/react'
+import moment from 'moment';
 import axios from 'axios';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg, isAdmin, setMyEvent, setEvents}) {
@@ -40,7 +41,7 @@ function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg, i
         <Flex pb='4px'>
           <Heading size='md'>{eventName}</Heading>
           <Spacer/>
-          <Text as='i'>{eventDate}</Text>
+          <Text as='i'>{moment(eventDate, "DD-MM-YYYY hh:mm a").format('DD MMM YYYY hh:mm a')}</Text>
         </Flex>
 
         <Text noOfLines={5}>

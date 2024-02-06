@@ -19,6 +19,7 @@ export default function Dashboard(props) {
   }, [myEvents])
 
   const isAdmin = useSelector(state => state.admin.value) // this is to get the global state from redux
+  console.log(events)
 
   function getAllEvents() {
     axios.post(import.meta.env.VITE_API_URL + "/getEvents", {userId: localStorage.getItem('personId')})

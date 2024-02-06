@@ -1,6 +1,6 @@
 require("dotenv").config();
-const { makeObjectId } = require("../db/functions");
 const Event = require("../db/schema/Event");
+const Form = require("../db/schema/Form");
 const { isExistingUser } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
@@ -180,10 +180,10 @@ const POSTGetMyEvents = async (req, res, next) => {
 };
 
 const POSTRegisterEvent = async (req, res, next) => {
-  const { userId, eventId } = req.body;
-  if (!(userId && eventId)) {
+  const { userId, eventId, responses } = req.body;
+  if (!(userId && eventId && responses)) {
     return res.status(403).json({
-      error: "userId, eventId is required for registering event",
+      error: "userId, eventId, responses are required for registering event",
     });
   }
   try {
@@ -199,7 +199,14 @@ const POSTRegisterEvent = async (req, res, next) => {
     }
     event.attendees.push(userId);
     await event.save();
-    return res.status(201).json({ success: "success" });
+    const form = await Form.findOne({ eventId: eventId });
+    if (form === null) {
+      return res
+        .status(404)
+        .json({ error: "form not found. please contact the admin" });
+    }
+    form.respondees.push({ userId: userId, responses: responses });
+    return res.status(201).json({});
   } catch (err) {
     return res.status(401).json({ error: err });
   }
