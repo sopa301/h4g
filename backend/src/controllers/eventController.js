@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { makeObjectId } = require("../db/functions");
 const Event = require("../db/schema/Event");
 const { isExistingUser } = require("../util/db");
 
