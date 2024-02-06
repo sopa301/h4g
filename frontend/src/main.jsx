@@ -27,7 +27,10 @@ import Home from "./routes/home";
 import Tasks from "./routes/tasks";
 import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
+import Settings from "./routes/settings";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
+import store from './app/store'
+import { Provider } from 'react-redux'
 
 const chakraTheme = chakraExtendTheme();
 const materialTheme = muiCreateTheme();
@@ -54,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "/update",
         element: <Update toast={toast}/>,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       },
       {
         path: "/projects",
@@ -92,12 +99,14 @@ root.render(
   <ChakraProvider theme={chakraTheme} resetCSS>
     {/* <React.StrictMode> */}
     <MaterialThemeProvider theme={{ [THEME_ID]: materialTheme }}>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <ToastContext.Provider value={toast}>
-          <RouterProvider router={router} />
-        </ToastContext.Provider>
-        <ToastContainer />
-      </LocalizationProvider>
+      <Provider store={store}>
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <ToastContext.Provider value={toast}>
+            <RouterProvider router={router} />
+          </ToastContext.Provider>
+          <ToastContainer />
+        </LocalizationProvider>
+      </Provider>
     </MaterialThemeProvider>
     {/* </React.StrictMode> */}
   </ChakraProvider>

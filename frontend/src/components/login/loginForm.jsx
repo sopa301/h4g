@@ -40,7 +40,7 @@ export default function LoginForm(props) {
         username: values.username,
         password: values.password,
       })
-      .then(function (response) {
+      .then((response) => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("personName", values.username);
         localStorage.setItem("personId", response.data.userId);
