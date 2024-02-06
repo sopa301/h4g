@@ -2,34 +2,6 @@ require("dotenv").config();
 const Event = require("../db/schema/Event");
 const Form = require("../db/schema/Form");
 
-const PUTForm = async (req, res, next) => {
-  const { userId, eventId, prompts } = req.body;
-  if (!(userId && eventId && prompts)) {
-    return res.status(403).json({
-      error: "userId, eventId, prompts is required for adding form",
-    });
-  }
-  try {
-    if (!isValidUser(userId)) {
-      return res.status(403).json({ error: "not authorised" });
-    }
-    if (!(await isExistingEvent(eventId))) {
-      return res.status(404).json({ error: "event not found" });
-    }
-    if (await Form.findOne({ eventId: eventId })) {
-      return res.status(403).json({ error: "form already exists" });
-    }
-    await Form.create({
-      eventId: eventId,
-      prompts: prompts,
-      respondees: [],
-    });
-    return res.status(201).json({});
-  } catch (err) {
-    return res.status(401).json({ error: err });
-  }
-};
-
 const POSTForm = async (req, res, next) => {
   const { userId, eventId } = req.body;
   if (!(userId && eventId)) {
@@ -77,31 +49,6 @@ const PATCHForm = async (req, res, next) => {
     }
     form.prompts = prompts;
     await form.save();
-    return res.status(201).json({});
-  } catch (err) {
-    return res.status(401).json({ error: err });
-  }
-};
-
-const DELETEForm = async (req, res, next) => {
-  const { userId, eventId } = req.body;
-  if (!(userId && eventId)) {
-    return res.status(403).json({
-      error: "userId, eventId is required for deleting form",
-    });
-  }
-  try {
-    if (!isValidUser(userId)) {
-      return res.status(403).json({ error: "not authorised" });
-    }
-    if (!(await isExistingEvent(eventId))) {
-      return res.status(404).json({ error: "event not found" });
-    }
-    const form = await Form.findOne({ eventId: eventId });
-    if (form === null) {
-      return res.status(404).json({ error: "form not found" });
-    }
-    await form.delete();
     return res.status(201).json({});
   } catch (err) {
     return res.status(401).json({ error: err });

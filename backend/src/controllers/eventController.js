@@ -43,6 +43,7 @@ const POSTEvent = async (req, res, next) => {
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
+    await Form.create({ eventId: eventId, respondees: [] });
     return res.status(201).json({
       eventId: eventId,
       eventName: event.eventName,
@@ -116,6 +117,7 @@ const DELETEEvent = async (req, res, next) => {
     if (deleted.deletedCount === 0) {
       return res.status(404).json({ error: "event not found" });
     }
+    await Form.deleteOne({ eventId: eventId });
     return res.status(201).json({ success: "success" });
   } catch (err) {
     console.log(err);
@@ -232,6 +234,10 @@ const POSTLeaveEvent = async (req, res, next) => {
     }
     event.attendees = event.attendees.filter((id) => id !== userId);
     await event.save();
+    await Form.updateOne(
+      { eventId: eventId },
+      { $pull: { respondees: { userId: userId } } }
+    );
     return res.status(201).json({ success: "success" });
   } catch (err) {
     return res.status(401).json({ error: err });
