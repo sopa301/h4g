@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box} from '@chakra-ui/react'
+import moment from 'moment';
 
 function EventCard({eventName, eventDate, eventDesc, eventImg}) {
   return (
@@ -21,7 +22,7 @@ function EventCard({eventName, eventDate, eventDesc, eventImg}) {
         <Flex pb='4px'>
           <Heading size='md'>{eventName}</Heading>
           <Spacer/>
-          <Text as='i'>{eventDate}</Text>
+          <Text as='i'>{moment(eventDate, "DD-MM-YYYY hh:mm a").format('DD MMM YYYY hh:mm a')}</Text>
         </Flex>
 
         <Text noOfLines={5}>

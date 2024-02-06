@@ -8,6 +8,9 @@ export default function Nav(props) {
         <Link to="./dashboard">Dashboard</Link>
       </Box>
       <Box paddingX="5px" fontWeight="bold">
+        <Link to="./update">Create Event</Link>
+      </Box>
+      <Box paddingX="5px" fontWeight="bold">
         <Link to="./settings">Settings</Link>
       </Box>
     </Stack>
