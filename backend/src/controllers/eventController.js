@@ -23,8 +23,12 @@ const PUTEvent = async (req, res, next) => {
       eventImg: eventImg,
       attendees: [],
     });
+    const eventId = event._id.toString();
+    if (!prompts) {
+      prompts = [];
+    }
     await Form.create({ eventId: eventId, prompts: prompts, respondees: [] });
-    return res.status(201).json({ eventId: event._id.toString() });
+    return res.status(201).json({ eventId: eventId });
   } catch (err) {
     return res.status(401).json({ error: err });
   }
