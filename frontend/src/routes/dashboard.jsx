@@ -19,7 +19,6 @@ export default function Dashboard(props) {
   }, [myEvents])
 
   const isAdmin = useSelector(state => state.admin.value) // this is to get the global state from redux
-  console.log(events)
 
   function getAllEvents() {
     axios.post(import.meta.env.VITE_API_URL + "/getEvents", {userId: localStorage.getItem('personId')})
@@ -40,7 +39,7 @@ export default function Dashboard(props) {
       <Grid templateColumns={{md:'repeat(2, 1fr)', sm: 'repeat(1, 1fr)'}} gap={4}>
         <GridItem>
           <Heading pb='10px'>Upcoming activities</Heading>
-          <Box maxHeight={{ md:'600px', lg: '800px'}} overflowY='auto'>
+          <Box maxHeight={{ md:'580px', lg: '600px', xl:'800px'}} overflowY='auto'>
           {events.map(eventData => (
             <Box key={eventData.eventId} pb="12px">
               <EventCard key={eventData.eventId} {...eventData} toast={props.toast} 

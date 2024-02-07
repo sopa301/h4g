@@ -31,8 +31,7 @@ function validateToken(token, navFn, personId, personName, toastFn, dispatch) {
         userId: personId,
         token: token,
       }).then((response) => {
-        console.log("dispatched");
-        console.log(response.data.isAdmin);
+        console.log("Admin Status: " + response.data.isAdmin);
         dispatch(updateAdmin(response.data.isAdmin))})
         .catch(function (error) {
         toastFn({

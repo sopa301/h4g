@@ -1,11 +1,13 @@
 import React from 'react'
+import { useState } from 'react';
 import {
   FormControl,
   FormLabel,
   FormErrorMessage,
   Button,
   Box, 
-  Text
+  Text,
+  Heading
 } from "@chakra-ui/react";
 import { Container, Input, Textarea } from '@chakra-ui/react';
 import { Field, Form, Formik } from "formik";
@@ -18,6 +20,47 @@ const defaultImg = "https://static.wixstatic.com/media/014c07_8aaef62173da4bb5b9
 function UpdateForm(props) {
 
   const toastEffect = props.toast;
+  const [inputs, setInputs] = useState([])
+  const [inputValue, setInputValue] = useState("")
+
+  const handleInput = () => {
+    if (inputValue === "") {
+      toastEffect({
+        title: "Fail to create prompt",
+        description: "Cannot have empty ptompt", 
+        status: 'warning',
+        duration: 1000,
+        isClosable: true
+      })
+
+      return 
+    }
+
+    setInputs([...inputs, inputValue])
+    setInputValue('')
+  }
+
+  async function updateForm(eventId) {
+    return await axios.patch(import.meta.env.VITE_API_URL + "/form", {
+      userId: localStorage.getItem("personId"), 
+      eventId: eventId,
+      prompts: inputs
+    }).then(res => toastEffect({
+      title: "Success",
+      description: "Added new event", 
+      status: 'success',
+      duration: 1000,
+      isClosable: true
+    })).catch(function (error) {
+      console.log(error)
+        toastEffect({
+          title: "Unable to create form",
+          description: getErrorMessage(error),
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+    })})
+  }
 
   async function updateEvent(eventName, eventDesc, eventImg, eventDate) {
     if (eventImg === "") {
@@ -30,16 +73,13 @@ function UpdateForm(props) {
       eventName: eventName,
       eventDate: eventDate, 
       eventDesc: eventDesc,
-      eventImg: eventImg
+      eventImg: eventImg,
+      
     })
-    .then(res => toastEffect({
-      title: "Success",
-      description: "Added new event", 
-      status: 'success',
-      duration: 1000,
-      isClosable: true
-    }))
-    .catch(function (error) {
+    .then(res => {
+      console.log(res.data)
+      updateForm(res.data.eventId)
+    }).catch(function (error) {
         toastEffect({
           title: "Unable to retrieve data.",
           description: getErrorMessage(error),
@@ -117,6 +157,7 @@ function UpdateForm(props) {
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.eventDate && form.touched.eventDate}
+                    pb='10px'
                   >
                   <FormLabel>Event Date</FormLabel>
                   <DateTimePicker 
@@ -127,6 +168,27 @@ function UpdateForm(props) {
                   </FormControl>
                 )}
             </Field>
+            <Field name="prompts">
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.prompts && form.touched.prompts}
+                    pb='10px'
+                  >
+                    <FormLabel>Enter volunteer signup information</FormLabel>
+                    <Box display='flex' justifyContent='space-between' pb="10px">
+                      <Input value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder="Enter prompt" width={{md:"400px"}}/>
+                      <Button onClick={handleInput} colorScheme='twitter'>Add</Button>
+                    </Box>
+                    <FormErrorMessage>{form.errors.prompts}</FormErrorMessage>
+                    
+                    <Text as="i">Prompts added:</Text>
+                    <Box px="10px">
+                      {inputs.map((input, key) => <Text key={key}>{key + 1}{`. `}{input}</Text>)}
+                    </Box>
+                  </FormControl>
+                )}
+            </Field>
+
             <Button
               mt={4}
               colorScheme="teal"
