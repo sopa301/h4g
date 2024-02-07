@@ -4,7 +4,8 @@ const Form = require("../db/schema/Form");
 const { isExistingUser } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
-  const { userId, eventName, eventDate, eventDesc, eventImg } = req.body;
+  const { userId, eventName, eventDate, eventDesc, eventImg, prompts } =
+    req.body;
   if (!(userId && eventName && eventDate && eventDesc && eventImg)) {
     return res.status(403).json({
       error:
@@ -22,7 +23,7 @@ const PUTEvent = async (req, res, next) => {
       eventImg: eventImg,
       attendees: [],
     });
-    await Form.create({ eventId: eventId, respondees: [] });
+    await Form.create({ eventId: eventId, prompts: prompts, respondees: [] });
     return res.status(201).json({ eventId: event._id.toString() });
   } catch (err) {
     return res.status(401).json({ error: err });
