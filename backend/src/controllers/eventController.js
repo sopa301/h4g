@@ -22,6 +22,7 @@ const PUTEvent = async (req, res, next) => {
       eventImg: eventImg,
       attendees: [],
     });
+    await Form.create({ eventId: eventId, respondees: [] });
     return res.status(201).json({ eventId: event._id.toString() });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -43,7 +44,6 @@ const POSTEvent = async (req, res, next) => {
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
-    await Form.create({ eventId: eventId, respondees: [] });
     return res.status(201).json({
       eventId: eventId,
       eventName: event.eventName,
