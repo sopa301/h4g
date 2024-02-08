@@ -10,10 +10,16 @@ async function connectToDatabase() {
   if (!dbUri) {
     throw new Error("Please define the MONGODB_URI environment variable");
   }
-  await mongoose.connect(dbUri).catch((error) => {
+  const conn = await mongoose.createConnection(dbUri).catch((error) => {
     console.error("Failed to connect to MongoDB", error);
   });
-  console.log("Connected to database");
+
+  conn.on("connected", () => console.log("connected"));
+  conn.on("open", () => console.log("open"));
+  conn.on("disconnected", () => console.log("disconnected"));
+  conn.on("reconnected", () => console.log("reconnected"));
+  conn.on("disconnecting", () => console.log("disconnecting"));
+  conn.on("close", () => console.log("close"));
 }
 
 module.exports = { connectToDatabase };
