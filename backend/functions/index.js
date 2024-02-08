@@ -4,8 +4,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./util/database");
-const createAssociations = require("./models/association");
+const { connectToDatabase } = require("./db/functions");
 
 /**
  * Import function triggers from their respective submodules:
@@ -23,14 +22,10 @@ const functions = require("firebase-functions");
 
 // import routes
 const loginSignupRoutes = require("./routes/loginsignup");
-const myTasksRoutes = require("./routes/mytasks");
-const personAvailRoutes = require("./routes/personavail");
-const projManagementRoutes = require("./routes/projmanagement");
-const runAlgoRoutes = require("./routes/runalgo");
-const taskManagementRoutes = require("./routes/taskmanagement");
+const eventRoutes = require("./routes/event");
+const formRoutes = require("./routes/form");
 
 const app = express();
-createAssociations.createAssociations();
 
 app.use(cors());
 
@@ -45,23 +40,13 @@ app.get("/", async (req, res, next) => {
 
 // use routes
 app.use(loginSignupRoutes);
-app.use(myTasksRoutes);
-app.use(personAvailRoutes);
-app.use(projManagementRoutes);
-app.use(runAlgoRoutes);
-app.use(taskManagementRoutes);
+app.use(eventRoutes);
+app.use(formRoutes);
 
 // Creating connection to listen for HTTP requests
-sequelize
-  .sync({ force: false })
-  .then((result) => {
-    console.log("Database and tables updated!");
-  })
-  .then(() => {
-    app.listen(4000);
-  })
-  .then(() => {
-    console.log("Example app listening at http://localhost:4000");
-  });
+app.listen(process.env.PORT, () => {
+  console.log(`Backend is running at port ${process.env.PORT}!`);
+});
+connectToDatabase();
 
 exports.app = functions.https.onRequest(app);
