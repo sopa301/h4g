@@ -56,10 +56,8 @@ const PATCHForm = async (req, res, next) => {
 };
 
 module.exports = {
-  PUTForm,
   POSTForm,
   PATCHForm,
-  DELETEForm,
 };
 
 async function isExistingEvent(eventId) {
