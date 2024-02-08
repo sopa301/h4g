@@ -13,7 +13,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg,
-isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setSignUp, setForm}) {
+isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
 
   async function handleForm() {
     await axios.post(import.meta.env.VITE_API_URL + "/form", {
@@ -21,23 +21,10 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setSignUp, setForm}) 
       eventId: eventId
     })
     .then(res => setForm({
-      eventName: eventName, 
+      eventName: eventName,
+      eventId: eventId,
       prompts: res.data.prompts}))
     .catch(error => console.log(error))
-  }
-
-  // handler to submit signup 
-  function handleRegister() {
-    axios.post(import.meta.env.VITE_API_URL + "/registerEvent", 
-      {
-        userId: localStorage.getItem("personId"),
-        eventId: eventId,
-      }
-    ).then(res => setMyEvent([])).catch(error => console.log(error))
-  }
-
-  function handleSignUp() {
-    setSignUp(eventId)
   }
 
   // Updates both dashboard when event deleted
@@ -92,9 +79,8 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setSignUp, setForm}) 
       <CardFooter>
         <Box display='flex' justifyContent='space-between' width="175px">
           <Button variant='solid' colorScheme='twitter' onClick={() => {
-            handleForm();
-            onOpen();
-            }}>
+            handleForm()
+            onOpen()}}>
             Sign Up
           </Button>
           {isAdmin ? 
