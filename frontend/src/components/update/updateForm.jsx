@@ -27,7 +27,7 @@ function UpdateForm(props) {
     if (inputValue === "") {
       toastEffect({
         title: "Fail to create prompt",
-        description: "Cannot have empty ptompt", 
+        description: "Cannot have empty prompt", 
         status: 'warning',
         duration: 1000,
         isClosable: true
