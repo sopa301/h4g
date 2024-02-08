@@ -74,12 +74,15 @@ function UpdateForm(props) {
       eventDate: eventDate, 
       eventDesc: eventDesc,
       eventImg: eventImg,
-      
+      prompts: inputs
     })
-    .then(res => {
-      console.log(res.data)
-      updateForm(res.data.eventId)
-    }).catch(function (error) {
+    .then(res => toastEffect({
+      title: "Success",
+      description: "Added new event", 
+      status: 'success',
+      duration: 1000,
+      isClosable: true
+    })).catch(function (error) {
         toastEffect({
           title: "Unable to retrieve data.",
           description: getErrorMessage(error),

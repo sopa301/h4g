@@ -1,8 +1,11 @@
 import React from 'react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { Stack, Heading, Text, StackDivider, Box } from '@chakra-ui/react'
+import { Stack, Heading, Text, StackDivider, Box, Button } from '@chakra-ui/react'
 
 function RegisterCard({toast, eventId, eventName, eventDate, eventDesc}) {
+
+ 
+
   return (
     <Card 
     direction={{ base: 'column', sm: 'row' }}
@@ -23,6 +26,9 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc}) {
             </Text>
           </Box>
         </Stack>
+        <Button colorScheme=''>
+            Leave
+        </Button>
       </CardBody>
     </Card>
   )

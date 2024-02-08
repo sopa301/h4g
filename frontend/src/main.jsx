@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: <Dashboard toast={toast}/>,
       },
       {
         path: "/update",
