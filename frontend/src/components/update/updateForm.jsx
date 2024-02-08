@@ -40,28 +40,6 @@ function UpdateForm(props) {
     setInputValue('')
   }
 
-  async function updateForm(eventId) {
-    return await axios.patch(import.meta.env.VITE_API_URL + "/form", {
-      userId: localStorage.getItem("personId"), 
-      eventId: eventId,
-      prompts: inputs
-    }).then(res => toastEffect({
-      title: "Success",
-      description: "Added new event", 
-      status: 'success',
-      duration: 1000,
-      isClosable: true
-    })).catch(function (error) {
-      console.log(error)
-        toastEffect({
-          title: "Unable to create form",
-          description: getErrorMessage(error),
-          status: "error",
-          duration: 1000,
-          isClosable: true,
-    })})
-  }
-
   async function updateEvent(eventName, eventDesc, eventImg, eventDate) {
     if (eventImg === "") {
       eventImg = defaultImg

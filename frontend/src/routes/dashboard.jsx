@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, GridItem, Text, Heading, Button } from '@chakra-ui/react'
+import { Box, Grid, GridItem, Text, Heading, Button, Input } from '@chakra-ui/react'
 import {
   Modal,
   ModalOverlay,
@@ -20,15 +20,18 @@ import axios from 'axios';
 export default function Dashboard(props) {
   const [events, setEvents] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
-  const [signUp, setSignUp] = useState("") //state to check which signup prompts to render
-  const [signEvent, setSignEvent] = useState()
   const [form, setForm] = useState({
-    eventName: "",
+    eventName: '',
+    eventId: '',
     prompts: []
   })
 
+  const [responses, setResponses] = useState(Array(form.prompts.length).fill(''))
+
   // states for modal 
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const useToast = props.toast;
+  console.log(form)
 
   useEffect(() => {
     getAllEvents()
@@ -38,18 +41,12 @@ export default function Dashboard(props) {
     getMyEvents()
   }, [])
 
-  // set state to current event user wants to sign up
   useEffect(() => {
-    const newEvent = [...events].filter(eventData => eventData.eventId === signUp)[0]
-    if (newEvent === undefined) {
-      setSignEvent()
-    } else { 
-      setSignEvent(newEvent)
-    }
-  }, [events, signUp])
-
+    setResponses(Array(form.prompts.length).fill(''))
+  }, [form])
 
   const isAdmin = useSelector(state => state.admin.value) // this is to get the global state from redux
+  console.log(responses)
 
   async function getAllEvents() {
     await axios.post(import.meta.env.VITE_API_URL + "/getEvents", {userId: localStorage.getItem('personId')})
@@ -65,9 +62,32 @@ export default function Dashboard(props) {
     .catch(error => console.log(error))
   }
 
+  async function handleRegisterEvent() {
+    await axios.post(import.meta.env.VITE_API_URL + "/registerEvent", {
+      userId: localStorage.getItem('personId'),
+      eventId: form.eventId,
+      responses: responses
+    }).then(res => {
+      const newMyEvents = [...events].filter(event => event.eventId == form.eventId)[0];
+      setMyEvents([...myEvents, newMyEvents]);
+      useToast({
+        title: "Successful signup",
+        description: "Signed up for " + form.eventName, 
+        status: 'success',
+        duration: 1000,
+        isClosable: true
+      });
+    }).catch(error => console.log(error))
+  }
+
+  const handleResponse = (index, value) => {
+    const newResponses = [...responses];
+    newResponses[index] = value;
+    setResponses(newResponses);
+  };
+
   return (
     <Box px={{md:'100px', base:'30px'}} pt="10px">
-      {signEvent !== undefined ? (
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -75,23 +95,25 @@ export default function Dashboard(props) {
           <ModalCloseButton />
           <ModalBody>
             {form.prompts.length === 0 ? 
-            <Text>No Additional Information Required</Text> : form.prompts.map((prompt, key) => 
-            <Text fontWeight='bold' mb='1rem' key={key}>
-              {prompt}
-            </Text>)
+            <Text>No Additional Information Required</Text> : form.prompts.map((prompt, ind) => 
+            <Box key={ind}>
+              <Text fontWeight='bold' mb='1rem'>
+                {prompt}
+              </Text>
+              <Input value={responses[ind]} onChange={e => handleResponse(ind, e.target.value)}/>
+            </Box>
+            )
             }
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='teal' mr={3}>Submit</Button>
+            <Button colorScheme='teal' mr={3} onClick={handleRegisterEvent}>Submit</Button>
             <Button colorScheme='twitter' onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>) 
-      : <></>
-      }
+      </Modal>
 
       <Grid templateColumns={{md:'repeat(2, 1fr)', sm: 'repeat(1, 1fr)'}} gap={4}>
         <GridItem>
@@ -106,7 +128,6 @@ export default function Dashboard(props) {
               events={events}
               myEvents={myEvents}
               onOpen={onOpen}
-              setSignUp={setSignUp}
               setForm = {setForm}/>
             </Box>
           ))}
@@ -119,7 +140,8 @@ export default function Dashboard(props) {
             ? <Text fontSize='lg'>{`No Events :(`}</Text>
             : myEvents.map(registerData => (
             <Box key={registerData.eventId} pb="12px">
-              <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}/>
+              <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}
+                  myEvents={myEvents} setMyEvents={setMyEvents}/>
             </Box>
             ))} 
           </Box>
