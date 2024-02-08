@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
 const Form = require("../db/schema/Form");
+const { isExistingUser } = require("../util/db");
 
 const POSTForm = async (req, res, next) => {
   const { userId, eventId } = req.body;
@@ -25,6 +26,7 @@ const POSTForm = async (req, res, next) => {
       prompts: form.prompts,
     });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
@@ -63,4 +65,11 @@ module.exports = {
 async function isExistingEvent(eventId) {
   const event = await Event.findOne({ _id: eventId });
   return event !== null;
+}
+
+function isValidUser(userId) {
+  if (!userId) {
+    throw new Error("userId is required for authentication");
+  }
+  return isExistingUser(userId);
 }
