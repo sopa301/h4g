@@ -2,7 +2,11 @@ require("dotenv").config();
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../db/schema/User");
-const { isExistingUser, getUserByName } = require("../util/db");
+const {
+  getUserById,
+  isExistingUserByName,
+  getUserByName,
+} = require("../util/db");
 
 // constant declarations for encryption
 const tokenDuration = process.env.TOKEN_DURATION;
@@ -24,7 +28,7 @@ const signupUser = async (req, res, next) => {
   }
   const encryptedPassword = encryptPassword(password);
   try {
-    if (await isExistingUser(username)) {
+    if (await isExistingUserByName(username)) {
       return res.status(403).json({ error: "username taken" });
     }
     await User.create({
@@ -122,8 +126,4 @@ async function updateUserToken(userId, token) {
 function encryptPassword(password) {
   const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
   return cipher.update(password, "utf-8", "hex") + cipher.final("hex");
-}
-
-async function getUserById(userId) {
-  return await User.findOne({ _id: userId }).exec();
 }

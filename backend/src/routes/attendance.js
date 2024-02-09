@@ -1,10 +1,19 @@
 const express = require("express");
-const { POSTForm, PATCHForm } = require("../controllers/formController");
+const {
+  POSTMakeQrCode,
+  POSTGetQrCode,
+  POSTAttend,
+  POSTGetAttendance,
+} = require("../controllers/attendanceController");
 
 const router = express.Router();
 
-router.post("/form", POSTForm);
+router.post("/makeQrCode", POSTMakeQrCode);
 
-router.patch("/form", PATCHForm);
+router.post("/getQrCode", POSTGetQrCode);
+
+router.post("/attend", POSTAttend);
+
+router.post("/getAttendance", POSTGetAttendance);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
 const Form = require("../db/schema/Form");
-const { isExistingUser } = require("../util/db");
+const { isExistingUserById } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
   const { userId, eventName, eventDate, eventDesc, eventImg, prompts } =
@@ -13,7 +13,7 @@ const PUTEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.create({
@@ -27,7 +27,13 @@ const PUTEvent = async (req, res, next) => {
     if (!prompts) {
       prompts = [];
     }
-    await Form.create({ eventId: eventId, prompts: prompts, respondees: [] });
+    await Form.create({
+      eventId: eventId,
+      prompts: prompts,
+      respondees: [],
+      qr: null,
+      attendances: [],
+    });
     return res.status(201).json({ eventId: eventId });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -42,7 +48,7 @@ const POSTEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.findOne({ _id: eventId });
@@ -78,7 +84,7 @@ const PATCHEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.findOne({ _id: eventId });
@@ -115,7 +121,7 @@ const DELETEEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const deleted = await Event.deleteOne({ _id: eventId });
@@ -138,7 +144,7 @@ const POSTGetEvents = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     let events = await Event.find({}, { attendees: 0, __v: 0 });
@@ -165,7 +171,7 @@ const POSTGetMyEvents = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     let events = await Event.find({}, { __v: 0 });
@@ -194,7 +200,7 @@ const POSTRegisterEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.findOne({ _id: eventId });
@@ -213,6 +219,8 @@ const POSTRegisterEvent = async (req, res, next) => {
         .json({ error: "form not found. please contact the admin" });
     }
     form.respondees.push({ userId: userId, responses: responses });
+    form.attendances.push({ userId: userId, attendance: false });
+    await form.save();
     return res.status(201).json({});
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -227,7 +235,7 @@ const POSTLeaveEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!isValidUser(userId)) {
+    if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
     const event = await Event.findOne({ _id: eventId });
@@ -239,10 +247,15 @@ const POSTLeaveEvent = async (req, res, next) => {
     }
     event.attendees = event.attendees.filter((id) => id !== userId);
     await event.save();
-    await Form.updateOne(
-      { eventId: eventId },
-      { $pull: { respondees: { userId: userId } } }
-    );
+    const form = await Form.findOne({ eventId: eventId });
+    if (form === null) {
+      return res
+        .status(404)
+        .json({ error: "form not found. please contact the admin" });
+    }
+    form.respondees = form.respondees.filter((res) => res.userId !== userId);
+    form.attendances = form.attendances.filter((att) => att.userId !== userId);
+    await form.save();
     return res.status(201).json({ success: "success" });
   } catch (err) {
     return res.status(401).json({ error: err });
@@ -260,9 +273,9 @@ module.exports = {
   POSTLeaveEvent,
 };
 
-function isValidUser(userId) {
+async function isValidUser(userId) {
   if (!userId) {
     throw new Error("userId is required for authentication");
   }
-  return isExistingUser(userId);
+  return await isExistingUserById(userId);
 }

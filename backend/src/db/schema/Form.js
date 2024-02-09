@@ -8,6 +8,11 @@ const formSchema = new mongoose.Schema({
     type: [{ userId: String, responses: [String] }],
     required: true,
   },
+  qr: { type: String, required: false },
+  attendances: {
+    type: [{ userId: String, attendance: Boolean }],
+    required: true,
+  },
 });
 
 // 3. Create a Model.
