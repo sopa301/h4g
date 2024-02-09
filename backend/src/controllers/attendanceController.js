@@ -116,11 +116,38 @@ const POSTGetAttendance = async (req, res, next) => {
   }
 };
 
+const POSTUpdateHours = async (req, res, next) => {
+  try {
+    const { eventId, hourUpdate } = req.body;
+    if (!(eventId && volunteerHours)) {
+      return res
+        .status(403)
+        .json({ error: "eventId, hourUpdate is required for updating hours" });
+    }
+    const event = await Event.findOne({ _id: eventId }, { attendees: 1 });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    event.attendees = event.attendees.map((attendee) => {
+      const user = hourUpdate.find((item) => item.userId === attendee.userId);
+      if (user) {
+        attendee.hours = user.hours;
+      }
+      return attendee;
+    });
+    event.save();
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ error: err });
+  }
+};
+
 module.exports = {
   POSTMakeQrCode,
   POSTGetQrCode,
   POSTAttend,
   POSTGetAttendance,
+  POSTUpdateHours,
 };
 
 async function isValidUser(userId) {
