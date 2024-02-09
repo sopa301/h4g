@@ -7,6 +7,8 @@ const {
   isExistingUserByName,
   getUserByName,
 } = require("../util/db");
+const { get } = require("http");
+const { makeNewUser } = require("../db/util/user");
 
 // constant declarations for encryption
 const tokenDuration = process.env.TOKEN_DURATION;
@@ -20,26 +22,21 @@ const Securitykey = Buffer.from(
 // side note: Everytime encryption/decryption is run, a new cipher object needs to be created.
 
 const signupUser = async (req, res, next) => {
-  const { username, email, teleHandle, password } = req.body;
-  if (!(username && email && password)) {
-    return res.status(403).json({
-      error: "Username, email and password is required for signing up",
-    });
-  }
-  const encryptedPassword = encryptPassword(password);
+  const { username, email, teleHandle, password, age } = req.body;
   try {
+    if (!(username && email && password, age)) {
+      return res.status(403).json({
+        error: "Username, email, age and password is required for signing up",
+      });
+    }
+    const encryptedPassword = encryptPassword(password);
+
     if (await isExistingUserByName(username)) {
       return res.status(403).json({ error: "username taken" });
     }
-    await User.create({
-      username: username,
-      email: email,
-      teleHandle: teleHandle,
-      availability: [],
-      isAdmin: false,
-      passwordHash: encryptedPassword,
-      token: "none",
-    });
+    await User.create(
+      makeNewUser(username, email, teleHandle, encryptedPassword, age)
+    );
     return res.status(201).json({ success: "success" });
   } catch (err) {
     console.log(err);
@@ -99,9 +96,7 @@ const validateUser = async (req, res, next) => {
       throw new Error("Invalid token");
     }
     verifyToken(token);
-    return res
-      .status(201)
-      .json({ success: "Token authenticated!", isAdmin: existingUser.isAdmin });
+    return res.status(201).json({ isAdmin: existingUser.isAdmin });
   } catch (err) {
     console.log(err);
     return res.status(401).send("Invalid Token. Please log in again.");

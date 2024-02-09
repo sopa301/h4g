@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../db/schema/User");
+const { makeJsonUser } = require("../db/util/user");
 
 const POSTUser = async (req, res, next) => {
   const { userId } = req.body;
@@ -9,16 +10,19 @@ const POSTUser = async (req, res, next) => {
     });
   }
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne(
+      { _id: userId },
+      {
+        isAdmin: 0,
+        passwordHash: 0,
+        token: 0,
+        __v: 0,
+      }
+    );
     if (user === null) {
       return res.status(404).json({ error: "user not found" });
     }
-    return res.status(201).json({
-      username: user.username,
-      email: user.email,
-      teleHandle: user.teleHandle,
-      availability: user.availability,
-    });
+    return res.status(201).json(makeJsonUser(user));
   } catch (err) {
     console.log(err);
     return res.status(401).json({ error: err });
@@ -26,7 +30,7 @@ const POSTUser = async (req, res, next) => {
 };
 
 const PATCHUser = async (req, res, next) => {
-  const { userId, username, email, teleHandle, availability } = req.body;
+  const { userId } = req.body;
   if (!userId) {
     return res.status(403).json({
       error: "userId is required for updating user",
@@ -37,17 +41,18 @@ const PATCHUser = async (req, res, next) => {
     if (user === null) {
       return res.status(404).json({ error: "user not found" });
     }
-    if (username) {
-      user.username = username;
-    }
-    if (email) {
-      user.email = email;
-    }
-    if (teleHandle) {
-      user.teleHandle = teleHandle;
-    }
-    if (availability) {
-      user.availability = availability;
+    for (let key in req.body) {
+      if (
+        key === "userId" ||
+        key === "passwordHash" ||
+        key === "token" ||
+        key === "isAdmin" ||
+        key === "__v" ||
+        key === "_id"
+      ) {
+        continue;
+      }
+      user[key] = req.body[key];
     }
     await user.save();
     return res.status(201).json({});
