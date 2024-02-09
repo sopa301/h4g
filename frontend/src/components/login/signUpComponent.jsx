@@ -69,13 +69,14 @@ export default function SignUpComponent() {
     }
     return error;
   }
-  async function signUpFunction(user, pass, email, telegram) {
+  async function signUpFunction(user, pass, email, telegram, age) {
     return await axios
       .post(import.meta.env.VITE_API_URL + "/signup", {
         username: user,
         password: pass,
         email: email,
-        teleHandle: telegram
+        teleHandle: telegram,
+        age: age
       })
       .then(function () {
         toast({
@@ -107,9 +108,9 @@ export default function SignUpComponent() {
       <Box>
         <Heading pb='10px'>Sign Up as a Volunteer</Heading>
         <Formik
-          initialValues={{ username: "", password: "", password2: "", email:"", telegram: ""}}
+          initialValues={{ username: "", password: "", password2: "", email:"", telegram: "", age: ""}}
           onSubmit={(values, actions) => {
-            signUpFunction(values.username, values.password, values.email, values.telegram).then((result) => {
+            signUpFunction(values.username, values.password, values.email, values.telegram, values.age).then((result) => {
               actions.setSubmitting(result);
               if (result) {
                 navigate("/login");
@@ -147,6 +148,17 @@ export default function SignUpComponent() {
                   >
                     <FormLabel>Telegram Handle (Optional)</FormLabel>
                     <Input {...field} placeholder="telegram"/>
+                  </FormControl>
+                )}
+              </Field>
+              <Field name="age">
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.age && form.touched.age}
+                  >
+                    <FormLabel>Age</FormLabel>
+                    <Input {...field} placeholder="age" type='number' min='0'/>
+                    <FormErrorMessage>{form.errors.age}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
