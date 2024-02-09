@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/settings",
-        element: <Settings />,
+        element: <Settings toast={toast} />,
       },
       {
         path: "/projects",
