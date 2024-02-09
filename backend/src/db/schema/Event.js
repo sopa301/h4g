@@ -8,7 +8,17 @@ const eventSchema = new mongoose.Schema({
   eventImg: { type: String, required: true },
   prompts: { type: [String], required: true },
   attendees: {
-    type: [{ userId: String, responses: [String], attendance: Boolean }],
+    type: [
+      {
+        userId: String,
+        username: String,
+        age: Number,
+        responses: [String],
+        attendance: Boolean,
+        hours: Number,
+        feedback: String,
+      },
+    ],
     required: true,
   },
   qr: { type: String, required: false },

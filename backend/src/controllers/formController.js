@@ -1,6 +1,5 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
-const { replaceIdWithEventId } = require("../db/util/event");
 const { isExistingUserById } = require("../util/db");
 
 const POSTForm = async (req, res, next) => {
