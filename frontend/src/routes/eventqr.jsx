@@ -30,18 +30,21 @@ function EventQR() {
   }
 
   return (
-    <Box 
-      display="flex"
-      flexDirection="column"
-      alignItems="center">
-      <Heading pb='10px'>Event QR Code</Heading>
-      <QRCode
-        size={256}
-        style={{ height: "auto", maxWidth: "30%", width: "30%" }}
-        value={hash}
-        viewBox={`0 0 256 256`}
-        />
-    </Box>
+    <>
+      {isAdmin && <Box 
+        display="flex"
+        flexDirection="column"
+        alignItems="center">
+        <Heading pb='10px'>Event QR Code</Heading>
+        <QRCode
+          size={256}
+          style={{ height: "auto", maxWidth: "30%", width: "30%" }}
+          value={hash}
+          viewBox={`0 0 256 256`}
+          />
+      </Box>}
+    </>
+    
   )
 }
 

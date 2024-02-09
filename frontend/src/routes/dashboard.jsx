@@ -9,6 +9,13 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
+import { Field, Form, Formik } from "formik";
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Textarea
+} from "@chakra-ui/react";
 import EventCard from '../components/dashboard/eventCard';
 import RegisterCard from '../components/dashboard/registerCard';
 import { useSelector, useDispatch } from 'react-redux'
@@ -101,6 +108,19 @@ export default function Dashboard(props) {
     setResponses(newResponses);
   };
 
+  function validateFeedback(value) {
+  let error;
+  if (!value) {
+    error = "Feedback cannot be empty!";
+  }
+
+  return error;
+  }
+
+  function sendFeedback(feedback) {
+    return feedback
+  }
+
   return (
     <Box px={{md:'100px', base:'30px'}} pt="10px">
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
@@ -108,10 +128,26 @@ export default function Dashboard(props) {
         { showEvent 
         ? (
           <ModalContent>
-            <ModalHeader>FeedBack</ModalHeader>
+            <ModalHeader>Give feedback</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              {/* feedback */}
+              <Formik
+                initialValues={{ feedback:"" }}
+                onSubmit={(values, actions) => sendFeedback(values.feedback)}
+              >
+              <Field name="feedback" validate={validateFeedback}>
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.feedback && form.touched.feedback}
+                    pb='10px'
+                  >
+                    <Textarea {...field} resize="vertical" placeholder="feedback">
+                    </Textarea>
+                    <FormErrorMessage>{form.errors.feedback}</FormErrorMessage>
+                  </FormControl>
+                )}
+                </Field>
+              </Formik>
             </ModalBody>
             <ModalFooter>
               <Button colorScheme='teal' mr={3}>Submit</Button>
@@ -161,7 +197,8 @@ export default function Dashboard(props) {
               events={events}
               myEvents={myEvents}
               onOpen={onOpen}
-              setForm = {setForm}/>
+              setForm={setForm}
+              setShowEvent={setShowEvent}/>
             </Box>
           ))}
           </Box>
@@ -174,7 +211,8 @@ export default function Dashboard(props) {
             : myEvents.map(registerData => (
             <Box key={registerData.eventId} pb="12px">
               <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}
-                  myEvents={myEvents} setMyEvents={setMyEvents} now={now}/>
+                  myEvents={myEvents} setMyEvents={setMyEvents} now={now} 
+                  onOpen={onOpen} setShowEvent={setShowEvent}/>
             </Box>
             ))} 
           </Box>

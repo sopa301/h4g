@@ -6,7 +6,8 @@ import { DateTime, Interval } from 'luxon'
 import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 
-function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents, setMyEvents, now}) {
+function RegisterCard({toast, eventId, eventName, eventDate, eventDesc,
+    myEvents, setMyEvents, now, onOpen, setShowEvent}) {
 
   async function handleLeave() {
     await axios.post(import.meta.env.VITE_API_URL + "/leaveEvent", {
@@ -55,7 +56,7 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
         {
           isOver ? 
           <>
-            <Button colorScheme='twitter'>FeedBack</Button>
+            <Button colorScheme='twitter' onClick={() => { setShowEvent(true); onOpen();}}>FeedBack</Button>
           </>
           : 
           <>

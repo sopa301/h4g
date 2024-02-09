@@ -14,7 +14,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg,
-isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
+isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm, setShowEvent}) {
 
   async function handleForm() {
     await axios.post(import.meta.env.VITE_API_URL + "/form", {
@@ -82,7 +82,8 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       <CardFooter>
         <Box display='flex' justifyContent='space-between' width="300px">
           <Button variant='solid' colorScheme='twitter' onClick={() => {
-            handleForm()
+            handleForm();
+            setShowEvent(false);
             onOpen()}}>
             Sign Up
           </Button>
