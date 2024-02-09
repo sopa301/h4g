@@ -48,7 +48,8 @@ const PATCHUser = async (req, res, next) => {
         key === "token" ||
         key === "isAdmin" ||
         key === "__v" ||
-        key === "_id"
+        key === "_id" ||
+        req.body[key] == null
       ) {
         continue;
       }
@@ -57,6 +58,7 @@ const PATCHUser = async (req, res, next) => {
     await user.save();
     return res.status(201).json({});
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
