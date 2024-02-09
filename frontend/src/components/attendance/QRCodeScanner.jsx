@@ -2,10 +2,44 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Box, Button, Center, Text } from '@chakra-ui/react';
 import Webcam from 'react-webcam';
 import jsQR from 'jsqr';
+import { useParams } from 'react-router-dom';
 
 const QRCodeScanner = () => {
   const webcamRef = useRef(null);
   const [qrCode, setQRCode] = useState(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      capture();
+    }, 1000); // Adjust the interval based on your requirements
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const videoConstraints = {
+    // facingMode: "user"
+    facingMode: { exact: "environment" }
+  };
+
+  const { eventId } = useParams()
+
+  async function handleAttend() {
+    await axios.post(import.meta.env.VITE_API_URL + "/attend", {
+      userId: localStorage.getItem('personId'),
+      eventId: eventId,
+      qr: qrCode
+    }).then(res => {
+      useToast({
+        title: "Successful",
+        description: "Attendance marked", 
+        status: 'success',
+        duration: 1000,
+        isClosable: true
+      });
+    }).catch(error => {
+      console.log(error)
+    })
+  }
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -29,19 +63,6 @@ const QRCodeScanner = () => {
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      capture();
-    }, 1000); // Adjust the interval based on your requirements
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const videoConstraints = {
-    // facingMode: "user"
-    facingMode: { exact: "environment" }
-  };
-
   return (
     <Box 
       display="flex"
@@ -58,7 +79,7 @@ const QRCodeScanner = () => {
       {/* {qrCode && <p>QR Code Data: {qrCode}</p>} */}
       {qrCode && (
         <Center pt="40px">
-          <Button colorScheme='teal'>Take Attendance</Button>
+          <Button colorScheme='teal' onClick={handleAttend}>Take Attendance</Button>
         </Center>)}
     </Box>
   );

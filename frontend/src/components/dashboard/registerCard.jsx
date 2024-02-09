@@ -1,6 +1,7 @@
 import React from 'react'
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, VStack, HStack } from '@chakra-ui/react'
 import { Stack, Heading, Text, StackDivider, Box, Button } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents, setMyEvents}) {
@@ -43,9 +44,16 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
             </Text>
           </Box>
         </Stack>
-        <Button colorScheme='red' onClick={handleLeave}>
+        <HStack spacing='12px'>
+          <Button colorScheme='red' onClick={handleLeave}>
             Leave
-        </Button>
+          </Button>
+          <Link to={`/attend/${eventId}`}>
+            <Button colorScheme='teal'>
+              Attend 
+            </Button>
+          </Link>
+        </HStack>
       </CardBody>
     </Card>
   )

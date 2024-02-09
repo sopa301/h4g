@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import moment from 'moment';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg,
 isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
@@ -76,19 +77,25 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       </CardBody>
 
       <CardFooter>
-        <Box display='flex' justifyContent='space-between' width="175px">
+        <Box display='flex' justifyContent='space-between' width="300px">
           <Button variant='solid' colorScheme='twitter' onClick={() => {
             handleForm()
             onOpen()}}>
             Sign Up
           </Button>
-          {isAdmin ? 
+          {isAdmin &&
           <Button variant='solid' colorScheme='red' onClick={handleDelete}>
             Delete
-          </Button>: <></> }
-        </Box>
+          </Button>}
+          {isAdmin && 
+          <Link to={`/eventqr/${eventId}`}>
+            <Button variant='solid' colorScheme='orange'>
+              QR Code
+            </Button>
+          </Link>
+          }
           
-        
+        </Box>
       </CardFooter>
     </Stack>
     </Card>
