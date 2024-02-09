@@ -75,7 +75,19 @@ export default function Dashboard(props) {
         duration: 1000,
         isClosable: true
       });
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      if (error.response.data.error === 'user already registered') {
+        useToast({
+        title: "Unsucessful",
+        description: "Already registered: " + form.eventName, 
+        status: 'error',
+        duration: 1000,
+        isClosable: true
+      });
+      }
+      console.log(error)
+      
+  })
   }
 
   const handleResponse = (index, value) => {
