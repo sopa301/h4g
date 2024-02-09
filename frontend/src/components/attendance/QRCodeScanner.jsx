@@ -18,8 +18,8 @@ const QRCodeScanner = ({toast}) => {
   }, []);
 
   const videoConstraints = {
-    facingMode: "user"
-    // facingMode: { exact: "environment" }
+    // facingMode: "user"
+    facingMode: { exact: "environment" }
   };
 
   const { eventId } = useParams()

@@ -122,7 +122,7 @@ export default function Dashboard(props) {
   }
 
   return (
-    <Box px={{md:'100px', base:'30px'}} pt="10px">
+    <Box px={{md:'50px', base:'30px'}} pt="10px">
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         { showEvent 
