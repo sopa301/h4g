@@ -60,8 +60,7 @@ const POSTEvent = async (req, res, next) => {
 };
 
 const PATCHEvent = async (req, res, next) => {
-  const { userId, eventId, eventName, eventDate, eventDesc, eventImg } =
-    req.body;
+  const { userId, eventId } = req.body;
   if (!(userId && eventId)) {
     return res.status(403).json({
       error: "userId, eventId is required for updating event",
@@ -75,17 +74,17 @@ const PATCHEvent = async (req, res, next) => {
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
-    if (eventName) {
-      event.eventName = eventName;
-    }
-    if (eventDate) {
-      event.eventDate = eventDate;
-    }
-    if (eventDesc) {
-      event.eventDesc = eventDesc;
-    }
-    if (eventImg) {
-      event.eventImg = eventImg;
+    for (let key in req.body) {
+      if (
+        key === "eventId" ||
+        key === "__v" ||
+        key === "_id" ||
+        key === "attendees" || // attendees should not be messed with like this for simplicity
+        !req.body[key]
+      ) {
+        continue;
+      }
+      event[key] = req.body[key];
     }
     await event.save();
     return res.status(201).json({ success: "success" });
