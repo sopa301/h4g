@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Form = require("../db/schema/Form");
 const { isExistingUserById } = require("../util/db");
+const jwt = require("jsonwebtoken");
 
 // QRCode generation
 const codeDuration = "365d";
@@ -28,6 +29,7 @@ const POSTMakeQrCode = async (req, res, next) => {
     await form.save();
     return res.status(201).json({ qr: form.qr });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
