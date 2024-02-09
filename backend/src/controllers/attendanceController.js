@@ -126,7 +126,7 @@ const POSTUpdateHours = async (req, res, next) => {
     }
     const event = await Event.findOne(
       { _id: eventId },
-      { attendees: 1, _id: 0 }
+      { attendees: 1, _id: 1 }
     );
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
