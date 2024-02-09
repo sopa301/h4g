@@ -84,7 +84,7 @@ const POSTAttend = async (req, res, next) => {
       return attendee;
     });
     await event.save();
-    return res.status(201).json({ success: "success" });
+    return res.status(201).json({});
   } catch (err) {
     console.log(err);
     return res.status(401).json({ error: err });
@@ -102,14 +102,13 @@ const POSTGetAttendance = async (req, res, next) => {
     if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const event = await Event.findOne({ _id: eventId }, { attendees: 1 });
-    const attendees = event.attendees.map((attendee) => {
-      return {
-        userId: attendee.userId,
-        attendance: attendee.attendance,
-      };
-    });
-    return res.status(201).json({ attendees: attendees });
+    const event = await Event.findOne(
+      { _id: eventId },
+      { eventName: 1, attendees: 1 }
+    );
+    return res
+      .status(201)
+      .json({ eventName: event.eventName, attendances: event.attendees });
   } catch (err) {
     return res.status(401).json({ error: err });
   }

@@ -7,7 +7,7 @@ const {
   removePersonFromEvent,
   addPersonToEvent,
 } = require("../db/util/event");
-const { isExistingUserById } = require("../util/db");
+const { isExistingUserById, getUserById } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
   try {
@@ -30,12 +30,33 @@ const PUTEvent = async (req, res, next) => {
     const eventId = event._id.toString();
     return res.status(201).json({ eventId: eventId });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
 
 const POSTEvent = async (req, res, next) => {
-  return res.status(403).json({ error: "not implemented" });
+  try {
+    const { userId, eventId } = req.body;
+    if (!(userId && eventId)) {
+      return res.status(403).json({
+        error: "userId, eventId is required for getting event",
+      });
+    }
+    if (!(await isValidUser(userId))) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const event = await Event.findOne(
+      { _id: eventId },
+      { eventName: 1, attendees: 1 }
+    );
+    return res
+      .status(201)
+      .json({ eventName: event.eventName, attendees: event.attendees });
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ error: err });
+  }
 };
 
 const PATCHEvent = async (req, res, next) => {
@@ -160,8 +181,9 @@ const POSTRegisterEvent = async (req, res, next) => {
     });
   }
   try {
-    if (!(await isValidUser(userId))) {
-      return res.status(403).json({ error: "not authorised" });
+    const user = await getUserById(userId);
+    if (user === null) {
+      return res.status(404).json({ error: "user not found" });
     }
     const event = await Event.findOne({ _id: eventId });
     if (event === null) {
@@ -170,7 +192,7 @@ const POSTRegisterEvent = async (req, res, next) => {
     if (eventHasPerson(event, userId)) {
       return res.status(403).json({ error: "user already registered" });
     }
-    addPersonToEvent(event, userId);
+    addPersonToEvent(event, user, responses);
     await event.save();
     return res.status(201).json({});
   } catch (err) {

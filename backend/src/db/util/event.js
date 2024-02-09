@@ -1,3 +1,5 @@
+const { makeNewAttendee } = require("./user");
+
 // Functions
 function makeNewEvent(eventName, eventDate, eventDesc, eventImg, prompts) {
   return {
@@ -22,8 +24,8 @@ function eventHasPerson(event, userId) {
   return event.attendees.some((attendee) => attendee.userId === userId);
 }
 
-function addPersonToEvent(event, userId) {
-  event.attendees.push({ userId: userId, responses: [], attendance: false });
+function addPersonToEvent(event, user, responses) {
+  event.attendees.push(makeNewAttendee(user, responses));
 }
 
 function removePersonFromEvent(event, userId) {
