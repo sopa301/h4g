@@ -14,6 +14,8 @@ import RegisterCard from '../components/dashboard/registerCard';
 import { useSelector, useDispatch } from 'react-redux'
 import { updateAdmin } from '.././features/admin/adminSlice'
 import { useDisclosure } from '@chakra-ui/react';
+import { DateTime } from 'luxon';
+
 import axios from 'axios';
 
 
@@ -25,6 +27,8 @@ export default function Dashboard(props) {
     eventId: '',
     prompts: []
   })
+
+  const now = DateTime.now()
 
   const [responses, setResponses] = useState(Array(form.prompts.length).fill(''))
 
@@ -151,7 +155,7 @@ export default function Dashboard(props) {
             : myEvents.map(registerData => (
             <Box key={registerData.eventId} pb="12px">
               <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}
-                  myEvents={myEvents} setMyEvents={setMyEvents}/>
+                  myEvents={myEvents} setMyEvents={setMyEvents} now={now}/>
             </Box>
             ))} 
           </Box>
