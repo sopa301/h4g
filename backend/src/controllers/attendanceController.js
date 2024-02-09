@@ -124,7 +124,10 @@ const POSTUpdateHours = async (req, res, next) => {
         .status(403)
         .json({ error: "eventId, hourUpdate is required for updating hours" });
     }
-    const event = await Event.findOne({ _id: eventId }, { attendees: 1 });
+    const event = await Event.findOne(
+      { _id: eventId },
+      { attendees: 1, _id: 0 }
+    );
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
@@ -136,6 +139,7 @@ const POSTUpdateHours = async (req, res, next) => {
       return attendee;
     });
     event.save();
+    return res.status(201).json({});
   } catch (err) {
     console.log(err);
     return res.status(401).json({ error: err });
