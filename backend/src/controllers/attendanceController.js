@@ -119,7 +119,7 @@ const POSTGetAttendance = async (req, res, next) => {
 const POSTUpdateHours = async (req, res, next) => {
   try {
     const { eventId, hourUpdate } = req.body;
-    if (!(eventId && volunteerHours)) {
+    if (!(eventId && hourUpdate)) {
       return res
         .status(403)
         .json({ error: "eventId, hourUpdate is required for updating hours" });
