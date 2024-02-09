@@ -3,8 +3,9 @@ import { Box, Button, Center, Text } from '@chakra-ui/react';
 import Webcam from 'react-webcam';
 import jsQR from 'jsqr';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const QRCodeScanner = () => {
+const QRCodeScanner = ({toast}) => {
   const webcamRef = useRef(null);
   const [qrCode, setQRCode] = useState(null);
 
@@ -17,8 +18,8 @@ const QRCodeScanner = () => {
   }, []);
 
   const videoConstraints = {
-    // facingMode: "user"
-    facingMode: { exact: "environment" }
+    facingMode: "user"
+    // facingMode: { exact: "environment" }
   };
 
   const { eventId } = useParams()
@@ -29,7 +30,7 @@ const QRCodeScanner = () => {
       eventId: eventId,
       qr: qrCode
     }).then(res => {
-      useToast({
+      toast({
         title: "Successful",
         description: "Attendance marked", 
         status: 'success',

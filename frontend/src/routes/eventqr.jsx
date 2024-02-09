@@ -17,17 +17,6 @@ function EventQR() {
     getEventHash()
   }, [])
 
-  console.log(hash)
-
-  const test = "Hello World"
-
-  async function createHash() {
-    await axios.post(import.meta.env.VITE_API_URL + "/makeQrCode", {
-      userId: localStorage.getItem('personId'),
-      eventId: eventId
-    }).then(res => console.log(res)).catch(error => console.log(error))
-  }
-
   async function getEventHash()  {
     await axios.post(import.meta.env.VITE_API_URL + "/getQrCode", {
         userId: localStorage.getItem('personId'),
@@ -49,7 +38,7 @@ function EventQR() {
       <QRCode
         size={256}
         style={{ height: "auto", maxWidth: "30%", width: "30%" }}
-        value={test}
+        value={hash}
         viewBox={`0 0 256 256`}
         />
     </Box>

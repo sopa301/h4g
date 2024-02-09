@@ -62,7 +62,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/attend/:eventId",
-        element: <Attendance />,
+        element: <Attendance toast={toast}/>,
       },
       {
         path: "/settings",

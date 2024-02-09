@@ -3,7 +3,7 @@ import QRCodeScanner from '../components/attendance/QRCodeScanner'
 import { Heading, useBreakpointValue } from '@chakra-ui/react'
 import { Text, Box } from '@chakra-ui/react';
 
-function Attendance() {
+function Attendance(props) {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
@@ -11,7 +11,7 @@ function Attendance() {
       { isMobile ? (
         <Box padding="10px">
           <Heading pb="10px" textAlign="center">Scan QRCode:</Heading>
-          <QRCodeScanner/> 
+          <QRCodeScanner toast={props.toast}/> 
         </Box>
       ) : 
       <Heading textAlign="center" pt="20px">Please Switch to Phone Device</Heading>

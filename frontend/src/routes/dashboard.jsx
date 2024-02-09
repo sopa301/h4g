@@ -26,7 +26,8 @@ export default function Dashboard(props) {
     eventName: '',
     eventId: '',
     prompts: []
-  })
+  });
+  const [showEvent, setShowEvent] = useState(false); 
 
   const now = DateTime.now()
 
@@ -104,29 +105,47 @@ export default function Dashboard(props) {
     <Box px={{md:'100px', base:'30px'}} pt="10px">
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{`Event Name: ` + form.eventName}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {form.prompts.length === 0 ? 
-            <Text>No Additional Information Required</Text> : form.prompts.map((prompt, ind) => 
-            <Box key={ind}>
-              <Text fontWeight='bold' mb='1rem'>
-                {prompt}
-              </Text>
-              <Input value={responses[ind]} onChange={e => handleResponse(ind, e.target.value)}/>
-            </Box>
-            )
-            }
-          </ModalBody>
+        { showEvent 
+        ? (
+          <ModalContent>
+            <ModalHeader>FeedBack</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {/* feedback */}
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='teal' mr={3}>Submit</Button>
+              <Button colorScheme='twitter' onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )
+        : (
+          <ModalContent>
+            <ModalHeader>{`Event Name: ` + form.eventName}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {form.prompts.length === 0 ? 
+              <Text>No Additional Information Required</Text> : form.prompts.map((prompt, ind) => 
+              <Box key={ind}>
+                <Text fontWeight='bold' mb='1rem'>
+                  {prompt}
+                </Text>
+                <Input value={responses[ind]} onChange={e => handleResponse(ind, e.target.value)}/>
+              </Box>
+              )
+              }
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='teal' mr={3} onClick={handleRegisterEvent}>Submit</Button>
-            <Button colorScheme='twitter' onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+            <ModalFooter>
+              <Button colorScheme='teal' mr={3} onClick={handleRegisterEvent}>Submit</Button>
+              <Button colorScheme='twitter' onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )}
       </Modal>
 
       <Grid templateColumns={{md:'repeat(2, 1fr)', sm: 'repeat(1, 1fr)'}} gap={4}>

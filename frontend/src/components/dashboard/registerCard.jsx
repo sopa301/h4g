@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, CardFooter, VStack, HStack } from '@chakra-
 import { Stack, Heading, Text, StackDivider, Box, Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { DateTime, Interval } from 'luxon'
-import moment from 'moment'
+import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 
 function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents, setMyEvents, now}) {
@@ -54,7 +54,9 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
         <HStack spacing='12px'>
         {
           isOver ? 
-          <Button colorScheme='twitter'>FeedBack</Button> 
+          <>
+            <Button colorScheme='twitter'>FeedBack</Button>
+          </>
           : 
           <>
             <Button colorScheme='red' onClick={handleLeave}>
