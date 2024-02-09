@@ -6,7 +6,7 @@ import { Box, Heading } from '@chakra-ui/react';
 import axios from 'axios';
 import QRCode from "react-qr-code";
 
-function EventQR() {
+function Eventqr() {
   const isAdmin = useSelector(state => state.admin.value)
   const { eventId } = useParams(); //get eventId from dynamic route 
 
@@ -48,4 +48,4 @@ function EventQR() {
   )
 }
 
-export default EventQR
+export default Eventqr

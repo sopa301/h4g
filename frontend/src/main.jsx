@@ -29,7 +29,7 @@ import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
 import Attendance from "./routes/attendance";
 import Settings from "./routes/settings";
-import EventQR from "./routes/eventQR";
+import Eventqr from "./routes/eventqr";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
 import store from './app/store'
 import { Provider } from 'react-redux'
@@ -70,7 +70,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/eventqr/:eventId",
-        element: <EventQR />,
+        element: <Eventqr />,
       },
       {
         path: "/projects",
