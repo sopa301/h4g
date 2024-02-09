@@ -77,7 +77,7 @@ const POSTAttend = async (req, res, next) => {
     if (form.qr !== qr) {
       return res.status(403).json({ error: "invalid qr" });
     }
-    form.attendees = form.attendees.map((attendee) => {
+    form.attendances = form.attendances.map((attendee) => {
       if (attendee.userId === userId) {
         attendee.attendance = true;
       }
@@ -86,6 +86,7 @@ const POSTAttend = async (req, res, next) => {
     await form.save();
     return res.status(201).json({ success: "success" });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };

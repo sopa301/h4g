@@ -4,15 +4,17 @@ const Form = require("../db/schema/Form");
 const { isExistingUserById } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
-  const { userId, eventName, eventDate, eventDesc, eventImg, prompts } =
-    req.body;
-  if (!(userId && eventName && eventDate && eventDesc && eventImg)) {
-    return res.status(403).json({
-      error:
-        "userId, eventName, eventDate, eventDesc, eventImg is required for adding event",
-    });
-  }
   try {
+    const { userId, eventName, eventDate, eventDesc, eventImg, prompts } =
+      req.body;
+    if (
+      !(userId && eventName && eventDate && eventDesc && eventImg && prompts)
+    ) {
+      return res.status(403).json({
+        error:
+          "userId, eventName, eventDate, eventDesc, eventImg is required for adding event",
+      });
+    }
     if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
