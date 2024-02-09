@@ -5,7 +5,7 @@ import SettingsForm from '../components/settings/settingsForm'
 function Settings(props) {
   return (
     <>
-      <SettingsForm />
+      <SettingsForm toast={props.toast} />
     </>
   )
 }
