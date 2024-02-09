@@ -85,7 +85,7 @@ function SettingsForm(props) {
   return (
     <>
       <Container mb='12'>
-        <Text fontSize='2xl' pb='4'>{localStorage.getItem('personName')}</Text>
+        <Text fontSize='2xl' pb='4' fontWeight='bold'>{localStorage.getItem('personName')}</Text>
           <Formik
             initialValues={{ userEmail: userEmail, userTelegram: userTelegram, userAge: userAge, userArea: userArea, availabilityDateFrom: availabilityDateFrom, availabilityDateTo: availabilityDateTo, interests: interests, skills:skills, addInfo: addInfo }}
             onSubmit={(values, actions) => updateUser(userEmail, userTelegram, userAge, userArea, values.availabilityDateFrom, values.availabilityDateTo, interests, skills, addInfo)}
