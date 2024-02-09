@@ -49,8 +49,7 @@ const PATCHUser = async (req, res, next) => {
         key === "isAdmin" ||
         key === "__v" ||
         key === "_id" ||
-        req.body[key] == "" ||
-        req.body[key] == null
+        !req.body[key]
       ) {
         continue;
       }
