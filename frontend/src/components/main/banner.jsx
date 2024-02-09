@@ -33,6 +33,7 @@ export default function Banner(props) {
   }*/
 
   return (
+    <Box position='sticky' top='0' zIndex='sticky'>
     <Flex
       size="2xl"
       backgroundColor="blue.400"
@@ -81,5 +82,6 @@ export default function Banner(props) {
           <Box />
         )*/}
     </Flex>
+    </Box>
   );
 }

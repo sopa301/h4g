@@ -88,7 +88,7 @@ function UpdateForm(props) {
 
 
   return (
-    <Container pt='20px'>
+    <Container pt='20px' mb='12'>
       <Formik
         initialValues={{ eventName: "", eventDesc: "", 
         eventImg: "",
@@ -145,7 +145,7 @@ function UpdateForm(props) {
                     value={formik.values.eventDate} 
                     onChange={(val) => formik.setFieldValue("eventDate", val, true)}
                     label="date time"
-                    />
+                  />
                   </FormControl>
                 )}
             </Field>
