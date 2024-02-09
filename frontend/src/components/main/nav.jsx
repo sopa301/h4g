@@ -1,8 +1,10 @@
 import { Box, Stack, Text, VStack, Button, Spacer } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Nav(props) {
   const navigate = useNavigate();
+  const isAdmin = useSelector(state => state.admin.value)
 
   const MenuItem = ({ children, isLast, to = "/", ...rest }) => {
     return (
@@ -42,7 +44,8 @@ export default function Nav(props) {
         pt={[4, 4, 0, 0]}
       >
         <MenuItem to="./dashboard">Dashboard</MenuItem>
-        <MenuItem to="./update">Create Event</MenuItem>
+        {isAdmin && <MenuItem to="./update">Create Event</MenuItem>}
+        <MenuItem to="./attendance">Attendance</MenuItem>
         <MenuItem to="./settings">Settings</MenuItem>
         <VStack>
         {props.loggedIn ? (
