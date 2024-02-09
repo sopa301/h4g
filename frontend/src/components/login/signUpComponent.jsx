@@ -104,7 +104,7 @@ export default function SignUpComponent() {
   const handleClick = () => setShow(!show);
 
   return (
-    <Container px="5px">
+    <Container px="5px" mb="20">
       <Box>
         <Heading pb='10px'>Sign Up as a Volunteer</Heading>
         <Formik
@@ -126,7 +126,7 @@ export default function SignUpComponent() {
                     isInvalid={form.errors.username && form.touched.username}
                   >
                     <FormLabel>Username</FormLabel>
-                    <Input {...field} placeholder="username"/>
+                    <Input {...field} placeholder="username" mb='2'/>
                     <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -137,7 +137,7 @@ export default function SignUpComponent() {
                     isInvalid={form.errors.email && form.touched.email}
                   >
                     <FormLabel>Email</FormLabel>
-                    <Input {...field} placeholder="email"/>
+                    <Input {...field} placeholder="email" mb='2'/>
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -147,7 +147,7 @@ export default function SignUpComponent() {
                   <FormControl
                   >
                     <FormLabel>Telegram Handle (Optional)</FormLabel>
-                    <Input {...field} placeholder="telegram"/>
+                    <Input {...field} placeholder="telegram" mb='2'/>
                   </FormControl>
                 )}
               </Field>
@@ -157,7 +157,7 @@ export default function SignUpComponent() {
                     isInvalid={form.errors.age && form.touched.age}
                   >
                     <FormLabel>Age</FormLabel>
-                    <Input {...field} placeholder="age" type='number' min='0'/>
+                    <Input {...field} placeholder="age" type='number' min='0' mb='2'/>
                     <FormErrorMessage>{form.errors.age}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -173,6 +173,7 @@ export default function SignUpComponent() {
                         {...field}
                         placeholder="password"
                         type={show ? "text" : "password"}
+                        mb='2'
                       />
                       <InputRightElement width="4.5rem">
                         <Button h="1.75rem" size="sm" onClick={handleClick}>
