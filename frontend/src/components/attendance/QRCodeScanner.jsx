@@ -20,6 +20,7 @@ const QRCodeScanner = () => {
       inversionAttempts: 'dontInvert',
     });
 
+
     if (code) {
       setQRCode(code.data);
     } else {
@@ -35,12 +36,17 @@ const QRCodeScanner = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const videoConstraints = {
+    facingMode: "user"
+  };
+
   return (
     <div>
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
+        videoConstraints={videoConstraints}
       />
       {qrCode && <p>QR Code Data: {qrCode}</p>}
     </div>
