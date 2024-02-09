@@ -205,7 +205,7 @@ export default function Dashboard(props) {
         </GridItem>
         <GridItem>
           <Heading pb='10px'>Events you signed up</Heading>
-          <Box maxHeight={{ md:'600px', lg: '800px'}} overflowY='auto'>
+          <Box maxHeight={{ md:'580px', lg: '600px', xl:'800px'}} overflowY='auto'>
             {myEvents.length == 0 
             ? <Text fontSize='lg'>{`No Events :(`}</Text>
             : myEvents.map(registerData => (

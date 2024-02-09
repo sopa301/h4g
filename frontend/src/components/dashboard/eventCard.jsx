@@ -1,14 +1,5 @@
 import React from 'react'
-import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box} from '@chakra-ui/react'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react'
+import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box, Grid} from '@chakra-ui/react'
 import { DateTime } from 'luxon';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -80,26 +71,34 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm, setShowEvent
       </CardBody>
 
       <CardFooter>
-        <Box display='flex' justifyContent='space-between' width="300px">
+        <Grid templateColumns="repeat(2, 1fr)" gap={4}>
           <Button variant='solid' colorScheme='twitter' onClick={() => {
             handleForm();
             setShowEvent(false);
-            onOpen()}}>
+            onOpen();
+          }}>
             Sign Up
           </Button>
-          {isAdmin &&
-          <Button variant='solid' colorScheme='red' onClick={handleDelete}>
-            Delete
-          </Button>}
-          {isAdmin && 
-          <Link to={`/eventqr/${eventId}`}>
-            <Button variant='solid' colorScheme='orange'>
-              QR Code
+          {isAdmin && (
+            <Button variant='solid' colorScheme='red' onClick={handleDelete}>
+              Delete
             </Button>
-          </Link>
-          }
-          
-        </Box>
+          )}
+          {isAdmin && (
+            <Link to={`/eventqr/${eventId}`}>
+              <Button variant='solid' colorScheme='orange'>
+                QR Code
+              </Button>
+            </Link>
+          )}
+          {isAdmin && (
+            <Link to={`/report/${eventId}`}>
+              <Button variant='solid' colorScheme='purple'>
+                Report
+              </Button>
+            </Link>
+          )}
+        </Grid>
       </CardFooter>
     </Stack>
     </Card>
