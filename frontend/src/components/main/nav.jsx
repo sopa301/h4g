@@ -45,7 +45,6 @@ export default function Nav(props) {
       >
         <MenuItem to="./dashboard">Dashboard</MenuItem>
         {isAdmin && <MenuItem to="./update">Create Event</MenuItem>}
-        <MenuItem to="./attendance">Attendance</MenuItem>
         <MenuItem to="./settings">Settings</MenuItem>
         <VStack>
         {props.loggedIn ? (

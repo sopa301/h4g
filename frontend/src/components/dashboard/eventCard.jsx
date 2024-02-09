@@ -1,19 +1,11 @@
 import React from 'react'
-import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box} from '@chakra-ui/react'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react'
-import moment from 'moment';
+import { Card, Image, Stack, CardBody, Heading, Text, CardFooter, Button, Flex, Spacer, Box, Grid} from '@chakra-ui/react'
+import { DateTime } from 'luxon';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg,
-isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
+isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm, setShowEvent}) {
 
   async function handleForm() {
     await axios.post(import.meta.env.VITE_API_URL + "/form", {
@@ -49,6 +41,9 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       .catch(error => console.log(error))
   }
 
+  const dt = DateTime.fromISO(eventDate)
+  const dtStr = dt.toFormat('dd LLL yyyy hh:mm a')
+
   return (
   <>
     <Card
@@ -67,7 +62,7 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       <CardBody>
         <Box pb='4px'>
           <Heading size='md'>{eventName}</Heading>
-          <Text as='i'>{moment(eventDate, "DD-MM-YYYY hh:mm a").format('DD MMM YYYY hh:mm a')}</Text>
+          <Text as='i'>{dtStr}</Text>
         </Box>
 
         <Text noOfLines={5}>
@@ -76,19 +71,34 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       </CardBody>
 
       <CardFooter>
-        <Box display='flex' justifyContent='space-between' width="175px">
+        <Grid templateColumns="repeat(2, 1fr)" gap={4}>
           <Button variant='solid' colorScheme='twitter' onClick={() => {
-            handleForm()
-            onOpen()}}>
+            handleForm();
+            setShowEvent(false);
+            onOpen();
+          }}>
             Sign Up
           </Button>
-          {isAdmin ? 
-          <Button variant='solid' colorScheme='red' onClick={handleDelete}>
-            Delete
-          </Button>: <></> }
-        </Box>
-          
-        
+          {isAdmin && (
+            <Button variant='solid' colorScheme='red' onClick={handleDelete}>
+              Delete
+            </Button>
+          )}
+          {isAdmin && (
+            <Link to={`/eventqr/${eventId}`}>
+              <Button variant='solid' colorScheme='orange'>
+                QR Code
+              </Button>
+            </Link>
+          )}
+          {isAdmin && (
+            <Link to={`/report/${eventId}`}>
+              <Button variant='solid' colorScheme='purple'>
+                Report
+              </Button>
+            </Link>
+          )}
+        </Grid>
       </CardFooter>
     </Stack>
     </Card>
