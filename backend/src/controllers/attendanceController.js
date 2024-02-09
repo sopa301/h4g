@@ -104,12 +104,14 @@ const POSTGetAttendance = async (req, res, next) => {
     }
     const event = await Event.findOne(
       { _id: eventId },
-      { eventName: 1, attendees: 1 }
+      { eventName: 1, attendees: 1, prompts: 1, _id: 0 }
     );
-    return res
-      .status(201)
-      .json({ eventName: event.eventName, attendances: event.attendees });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    return res.status(201).json(event.toObject());
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
