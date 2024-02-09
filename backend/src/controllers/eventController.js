@@ -1,7 +1,7 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
 const Form = require("../db/schema/Form");
-const { isExistingUser } = require("../util/db");
+const { isExistingUserById } = require("../util/db");
 
 const PUTEvent = async (req, res, next) => {
   const { userId, eventName, eventDate, eventDesc, eventImg, prompts } =
@@ -264,5 +264,5 @@ function isValidUser(userId) {
   if (!userId) {
     throw new Error("userId is required for authentication");
   }
-  return isExistingUser(userId);
+  return isExistingUserById(userId);
 }
