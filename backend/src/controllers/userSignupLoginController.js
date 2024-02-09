@@ -7,7 +7,6 @@ const {
   isExistingUserByName,
   getUserByName,
 } = require("../util/db");
-const { get } = require("http");
 const { makeNewUser } = require("../db/util/user");
 
 // constant declarations for encryption
