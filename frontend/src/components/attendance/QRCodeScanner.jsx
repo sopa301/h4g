@@ -37,7 +37,7 @@ const QRCodeScanner = () => {
   }, []);
 
   const videoConstraints = {
-    facingMode: "user"
+    facingMode: { exact: "environment" }
   };
 
   return (
