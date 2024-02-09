@@ -3,6 +3,7 @@ import { Table, Thead, Tbody, Tr, Th, Td, Input } from '@chakra-ui/react';
 import { Heading, Button, Flex, Box, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from '../ToastContext';
 
 function Report() {
   const [report, setReport] = useState({
@@ -10,7 +11,7 @@ function Report() {
     prompts: [], 
     attendees: [], 
   })
-  const [updateHours, setUpdateHours] = useState([])
+  const [updateHours, setUpdateHours] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   
   useEffect(() => {
@@ -32,23 +33,44 @@ function Report() {
         attendees: res.data.attendees
       })
       
-      const data = res.data.attendees.map(({ username, hours}) => (
-        {username: username, hours: hours}
+      const data = res.data.attendees.map(({userId, username, hours}) => (
+        {userId: userId, username: username, hours: hours}
       ));
       setUpdateHours(data)
     })
     .catch(error => console.log(error))
   }
 
+  async function handleHours() {
+    const update = updateHours.map(({userId, hours}) => ({userId: userId , hours: hours}))
+    console.log(update)
+
+    await axios.post(import.meta.env.VITE_API_URL + "/updateHours", {
+      eventId: eventId,
+      hourUpdate: update,
+    })
+    .then(res => {
+      toast({
+        title: "Successful",
+        description: "Hours Updated", 
+        status: 'success',
+        duration: 1000,
+        isClosable: true
+      })
+    })
+    .catch(error => console.log(error))
+  }
+
+
   const handleHoursChange = (ind, hours) => {
     const newHours = [...updateHours]
     newHours.filter(attendee =>
     attendee.username.toLowerCase().includes(searchQuery.toLowerCase())
-    )[ind].hours = hours
-    console.log(newHours)
+    )[ind].hours = parseInt(hours)
     setUpdateHours(newHours)
   }
 
+  console.log(updateHours)
 
   const filteredAttendees = report.attendees.filter(attendee =>
     attendee.username.toLowerCase().includes(searchQuery.toLowerCase())
@@ -67,7 +89,7 @@ function Report() {
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />
-        <Button ml={4} colorScheme="twitter">
+        <Button ml={4} colorScheme="twitter" onClick={handleHours}>
           Send all attendance
         </Button>
       </Flex>

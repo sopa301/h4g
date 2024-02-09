@@ -75,7 +75,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/report/:eventId",
-        element: <Report />,
+        element: <Report toast={toast}/>,
       },
       {
         path: "/projects",
