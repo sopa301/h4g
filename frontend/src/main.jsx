@@ -27,6 +27,7 @@ import Home from "./routes/home";
 import Tasks from "./routes/tasks";
 import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
+import Attendance from "./routes/attendance";
 import Settings from "./routes/settings";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
 import store from './app/store'
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/update",
         element: <Update toast={toast}/>,
+      },
+      {
+        path: "/attendance",
+        element: <Attendance />,
       },
       {
         path: "/settings",
