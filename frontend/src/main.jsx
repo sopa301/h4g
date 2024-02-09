@@ -29,6 +29,8 @@ import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
 import Attendance from "./routes/attendance";
 import Settings from "./routes/settings";
+import Eventqr from "./routes/eventqr";
+import Report from "./routes/report";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
 import store from './app/store'
 import { Provider } from 'react-redux'
@@ -60,12 +62,20 @@ const router = createBrowserRouter([
         element: <Update toast={toast}/>,
       },
       {
-        path: "/attendance",
-        element: <Attendance />,
+        path: "/attend/:eventId",
+        element: <Attendance toast={toast}/>,
       },
       {
         path: "/settings",
         element: <Settings toast={toast} />,
+      },
+      {
+        path: "/eventqr/:eventId",
+        element: <Eventqr />,
+      },
+      {
+        path: "/report/:eventId",
+        element: <Report />,
       },
       {
         path: "/projects",

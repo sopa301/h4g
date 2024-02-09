@@ -9,11 +9,20 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
+import { Field, Form, Formik } from "formik";
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Textarea
+} from "@chakra-ui/react";
 import EventCard from '../components/dashboard/eventCard';
 import RegisterCard from '../components/dashboard/registerCard';
 import { useSelector, useDispatch } from 'react-redux'
 import { updateAdmin } from '.././features/admin/adminSlice'
 import { useDisclosure } from '@chakra-ui/react';
+import { DateTime } from 'luxon';
+
 import axios from 'axios';
 
 
@@ -24,7 +33,10 @@ export default function Dashboard(props) {
     eventName: '',
     eventId: '',
     prompts: []
-  })
+  });
+  const [showEvent, setShowEvent] = useState(false); 
+
+  const now = DateTime.now()
 
   const [responses, setResponses] = useState(Array(form.prompts.length).fill(''))
 
@@ -96,33 +108,80 @@ export default function Dashboard(props) {
     setResponses(newResponses);
   };
 
+  function validateFeedback(value) {
+  let error;
+  if (!value) {
+    error = "Feedback cannot be empty!";
+  }
+
+  return error;
+  }
+
+  function sendFeedback(feedback) {
+    return feedback
+  }
+
   return (
     <Box px={{md:'100px', base:'30px'}} pt="10px">
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{`Event Name: ` + form.eventName}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {form.prompts.length === 0 ? 
-            <Text>No Additional Information Required</Text> : form.prompts.map((prompt, ind) => 
-            <Box key={ind}>
-              <Text fontWeight='bold' mb='1rem'>
-                {prompt}
-              </Text>
-              <Input value={responses[ind]} onChange={e => handleResponse(ind, e.target.value)}/>
-            </Box>
-            )
-            }
-          </ModalBody>
+        { showEvent 
+        ? (
+          <ModalContent>
+            <ModalHeader>Give feedback</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Formik
+                initialValues={{ feedback:"" }}
+                onSubmit={(values, actions) => sendFeedback(values.feedback)}
+              >
+              <Field name="feedback" validate={validateFeedback}>
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.feedback && form.touched.feedback}
+                    pb='10px'
+                  >
+                    <Textarea {...field} resize="vertical" placeholder="feedback">
+                    </Textarea>
+                    <FormErrorMessage>{form.errors.feedback}</FormErrorMessage>
+                  </FormControl>
+                )}
+                </Field>
+              </Formik>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='teal' mr={3}>Submit</Button>
+              <Button colorScheme='twitter' onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )
+        : (
+          <ModalContent>
+            <ModalHeader>{`Event Name: ` + form.eventName}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {form.prompts.length === 0 ? 
+              <Text>No Additional Information Required</Text> : form.prompts.map((prompt, ind) => 
+              <Box key={ind}>
+                <Text fontWeight='bold' mb='1rem'>
+                  {prompt}
+                </Text>
+                <Input value={responses[ind]} onChange={e => handleResponse(ind, e.target.value)}/>
+              </Box>
+              )
+              }
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='teal' mr={3} onClick={handleRegisterEvent}>Submit</Button>
-            <Button colorScheme='twitter' onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+            <ModalFooter>
+              <Button colorScheme='teal' mr={3} onClick={handleRegisterEvent}>Submit</Button>
+              <Button colorScheme='twitter' onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )}
       </Modal>
 
       <Grid templateColumns={{md:'repeat(2, 1fr)', sm: 'repeat(1, 1fr)'}} gap={4}>
@@ -138,20 +197,22 @@ export default function Dashboard(props) {
               events={events}
               myEvents={myEvents}
               onOpen={onOpen}
-              setForm = {setForm}/>
+              setForm={setForm}
+              setShowEvent={setShowEvent}/>
             </Box>
           ))}
           </Box>
         </GridItem>
         <GridItem>
           <Heading pb='10px'>Events you signed up</Heading>
-          <Box maxHeight={{ md:'600px', lg: '800px'}} overflowY='auto'>
+          <Box maxHeight={{ md:'580px', lg: '600px', xl:'800px'}} overflowY='auto'>
             {myEvents.length == 0 
             ? <Text fontSize='lg'>{`No Events :(`}</Text>
             : myEvents.map(registerData => (
             <Box key={registerData.eventId} pb="12px">
               <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}
-                  myEvents={myEvents} setMyEvents={setMyEvents}/>
+                  myEvents={myEvents} setMyEvents={setMyEvents} now={now} 
+                  onOpen={onOpen} setShowEvent={setShowEvent}/>
             </Box>
             ))} 
           </Box>

@@ -1,9 +1,13 @@
 import React from 'react'
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, VStack, HStack } from '@chakra-ui/react'
 import { Stack, Heading, Text, StackDivider, Box, Button } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import { DateTime, Interval } from 'luxon'
+import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 
-function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents, setMyEvents}) {
+function RegisterCard({toast, eventId, eventName, eventDate, eventDesc,
+    myEvents, setMyEvents, now, onOpen, setShowEvent}) {
 
   async function handleLeave() {
     await axios.post(import.meta.env.VITE_API_URL + "/leaveEvent", {
@@ -23,6 +27,11 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
     .catch(error => console.log(error))
   }
 
+  const dt = DateTime.fromISO(eventDate)
+  const interval = Interval.fromDateTimes(dt, now);
+  const isOver = (interval.length('days') > 1)
+  const dtStr = dt.toFormat('dd LLL yyyy hh:mm a')
+
   return (
     <Card 
     direction={{ base: 'column', sm: 'row' }}
@@ -34,7 +43,7 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
           <Box>
             <Heading size='md'>{eventName}</Heading>
             <Text pt='2' fontSize='sm'>
-              {eventDate}
+              {dtStr}
             </Text>
           </Box>
           <Box>
@@ -43,9 +52,25 @@ function RegisterCard({toast, eventId, eventName, eventDate, eventDesc, myEvents
             </Text>
           </Box>
         </Stack>
-        <Button colorScheme='red' onClick={handleLeave}>
-            Leave
-        </Button>
+        <HStack spacing='12px'>
+        {
+          isOver ? 
+          <>
+            <Button colorScheme='twitter' onClick={() => { setShowEvent(true); onOpen();}}>FeedBack</Button>
+          </>
+          : 
+          <>
+            <Button colorScheme='red' onClick={handleLeave}>
+              Leave
+            </Button>
+            <Link to={`/attend/${eventId}`}>
+              <Button colorScheme='teal'>
+                Attend 
+              </Button>
+            </Link>
+          </>
+        }
+        </HStack>
       </CardBody>
     </Card>
   )
