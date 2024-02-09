@@ -10,6 +10,9 @@ const POSTUser = async (req, res, next) => {
   }
   try {
     const user = User.findOne({ _id: userId });
+    if (user === null) {
+      return res.status(404).json({ error: "user not found" });
+    }
     return res.status(201).json({
       username: user.username,
       email: user.email,
@@ -31,6 +34,9 @@ const PATCHUser = async (req, res, next) => {
   }
   try {
     const user = User.findOne({ _id: userId });
+    if (user === null) {
+      return res.status(404).json({ error: "user not found" });
+    }
     if (username) {
       user.username = username;
     }
