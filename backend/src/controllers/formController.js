@@ -1,6 +1,6 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
-const Form = require("../db/schema/Form");
+const { replaceIdWithEventId } = require("../db/util/event");
 const { isExistingUserById } = require("../util/db");
 
 const POSTForm = async (req, res, next) => {
@@ -17,14 +17,8 @@ const POSTForm = async (req, res, next) => {
     if (!(await isExistingEvent(eventId))) {
       return res.status(404).json({ error: "event not found" });
     }
-    const form = await Form.findOne({ eventId: eventId });
-    if (form === null) {
-      return res.status(404).json({ error: "form not found" });
-    }
-    return res.status(201).json({
-      eventId: eventId,
-      prompts: form.prompts,
-    });
+    const form = await Event.findOne({ _id: eventId }, { _id: 0, prompts: 1 });
+    return res.status(201).json(form);
   } catch (err) {
     console.log(err);
     return res.status(401).json({ error: err });
@@ -45,12 +39,9 @@ const PATCHForm = async (req, res, next) => {
     if (!(await isExistingEvent(eventId))) {
       return res.status(404).json({ error: "event not found" });
     }
-    const form = await Form.findOne({ eventId: eventId });
-    if (form === null) {
-      return res.status(404).json({ error: "form not found" });
-    }
-    form.prompts = prompts;
-    await form.save();
+    const event = await Event.findOne({ _id: eventId });
+    event.prompts = prompts;
+    await event.save();
     return res.status(201).json({});
   } catch (err) {
     return res.status(401).json({ error: err });
