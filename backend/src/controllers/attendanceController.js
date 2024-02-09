@@ -42,9 +42,19 @@ const POSTGetQrCode = async (req, res, next) => {
     if (!(await isValidUser(userId))) {
       return res.status(403).json({ error: "not authorised" });
     }
-    const event = await Event.findOne({ _id: eventId }, { qr: 1, _id: 0 });
-    return res.status(201).json(event);
+    const event = await Event.findOne({ _id: eventId }, { qr: 1, _id: 1 });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    let qr = event.qr;
+    if (event.qr == null) {
+      qr = makeQRCode(eventId);
+      event.qr = qr;
+      await event.save();
+    }
+    return res.status(201).json({ qr: qr });
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ error: err });
   }
 };
