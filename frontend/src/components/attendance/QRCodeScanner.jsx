@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Box, Button, Center, Text } from '@chakra-ui/react';
 import Webcam from 'react-webcam';
 import jsQR from 'jsqr';
 
@@ -37,19 +38,29 @@ const QRCodeScanner = () => {
   }, []);
 
   const videoConstraints = {
+    // facingMode: "user"
     facingMode: { exact: "environment" }
   };
 
   return (
-    <div>
+    <Box 
+      display="flex"
+      flexDirection="column"
+      alignItems="center" 
+      px="5px">
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       />
-      {qrCode && <p>QR Code Data: {qrCode}</p>}
-    </div>
+      {qrCode === null ? <Text>Reading...</Text> : <></>}
+      {/* {qrCode && <p>QR Code Data: {qrCode}</p>} */}
+      {qrCode && (
+        <Center pt="40px">
+          <Button colorScheme='teal'>Take Attendance</Button>
+        </Center>)}
+    </Box>
   );
 };
 
