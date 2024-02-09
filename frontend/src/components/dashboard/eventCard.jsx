@@ -65,11 +65,10 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
     />
     <Stack>
       <CardBody>
-        <Flex pb='4px'>
+        <Box pb='4px'>
           <Heading size='md'>{eventName}</Heading>
-          <Spacer/>
           <Text as='i'>{moment(eventDate, "DD-MM-YYYY hh:mm a").format('DD MMM YYYY hh:mm a')}</Text>
-        </Flex>
+        </Box>
 
         <Text noOfLines={5}>
           {eventDesc}
