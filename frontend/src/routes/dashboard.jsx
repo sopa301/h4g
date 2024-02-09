@@ -31,7 +31,6 @@ export default function Dashboard(props) {
   // states for modal 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const useToast = props.toast;
-  console.log(form)
 
   useEffect(() => {
     getAllEvents()
@@ -46,7 +45,6 @@ export default function Dashboard(props) {
   }, [form])
 
   const isAdmin = useSelector(state => state.admin.value) // this is to get the global state from redux
-  console.log(responses)
 
   async function getAllEvents() {
     await axios.post(import.meta.env.VITE_API_URL + "/getEvents", {userId: localStorage.getItem('personId')})
