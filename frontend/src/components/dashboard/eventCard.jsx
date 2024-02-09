@@ -9,11 +9,12 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function EventCard({toast, eventId, eventName, eventDate, eventDesc, eventImg,
-isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
+isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm, setShowEvent}) {
 
   async function handleForm() {
     await axios.post(import.meta.env.VITE_API_URL + "/form", {
@@ -49,6 +50,9 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       .catch(error => console.log(error))
   }
 
+  const dt = DateTime.fromISO(eventDate)
+  const dtStr = dt.toFormat('dd LLL yyyy hh:mm a')
+
   return (
   <>
     <Card
@@ -65,11 +69,10 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
     />
     <Stack>
       <CardBody>
-        <Flex pb='4px'>
+        <Box pb='4px'>
           <Heading size='md'>{eventName}</Heading>
-          <Spacer/>
-          <Text as='i'>{moment(eventDate, "DD-MM-YYYY hh:mm a").format('DD MMM YYYY hh:mm a')}</Text>
-        </Flex>
+          <Text as='i'>{dtStr}</Text>
+        </Box>
 
         <Text noOfLines={5}>
           {eventDesc}
@@ -77,19 +80,26 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm}) {
       </CardBody>
 
       <CardFooter>
-        <Box display='flex' justifyContent='space-between' width="175px">
+        <Box display='flex' justifyContent='space-between' width="300px">
           <Button variant='solid' colorScheme='twitter' onClick={() => {
-            handleForm()
+            handleForm();
+            setShowEvent(false);
             onOpen()}}>
             Sign Up
           </Button>
-          {isAdmin ? 
+          {isAdmin &&
           <Button variant='solid' colorScheme='red' onClick={handleDelete}>
             Delete
-          </Button>: <></> }
-        </Box>
+          </Button>}
+          {isAdmin && 
+          <Link to={`/eventqr/${eventId}`}>
+            <Button variant='solid' colorScheme='orange'>
+              QR Code
+            </Button>
+          </Link>
+          }
           
-        
+        </Box>
       </CardFooter>
     </Stack>
     </Card>

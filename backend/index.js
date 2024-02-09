@@ -10,6 +10,8 @@ const { connectToDatabase } = require("./src/db/functions");
 const loginSignupRoutes = require("./src/routes/loginsignup");
 const eventRoutes = require("./src/routes/event");
 const formRoutes = require("./src/routes/form");
+const userRoutes = require("./src/routes/user");
+const attendanceRoutes = require("./src/routes/attendance");
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(loginSignupRoutes);
 app.use(eventRoutes);
 app.use(formRoutes);
+app.use(userRoutes);
+app.use(attendanceRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Backend is running at port ${process.env.PORT}!`);
