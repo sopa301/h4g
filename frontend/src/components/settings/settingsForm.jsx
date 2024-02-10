@@ -10,15 +10,22 @@ import {
   Flex,
   Spacer,
   Select,
+  Box,
+  Heading,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
+import Certificate from "../certificate";
 
 function SettingsForm(props) {
   const userSettings = props.userSettings;
   const updateUser = props.updateUser;
+  const userHours = userSettings.volunteeringHours;
+  const name = userSettings.username;
   const [userEmail, setUserEmail] = useState(userSettings.email);
   const [userTelegram, setUserTelegram] = useState(userSettings.teleHandle);
   const [userAge, setUserAge] = useState(userSettings.age);
@@ -36,9 +43,19 @@ function SettingsForm(props) {
   return (
     <>
       <Container mb="12">
-        <Text fontSize="2xl" pb="4" fontWeight="bold">
-          {localStorage.getItem("personName")}
-        </Text>
+        <Box pb='10px' >
+          <Heading size='lg'>
+            {localStorage.getItem("personName")}
+          </Heading>
+          <Grid borderBottom='2px' pb="4px" borderColor='gray.400' templateColumns="repeat(2, 1fr)" gap={4}>
+            <GridItem>
+              <Text pt="20px">Voluntering Hours: {userHours}</Text>
+            </GridItem>
+            <GridItem justifySelf='end'> 
+              <Certificate name={name} hours={userHours.toString()}/>     
+            </GridItem>
+          </Grid>
+        </Box>
         <Formik
           initialValues={{
             userEmail: userEmail,
