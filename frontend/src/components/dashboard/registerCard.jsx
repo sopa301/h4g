@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardHeader, CardBody, CardFooter, VStack, HStack } from '@chakra-ui/react'
 import { Stack, Heading, Text, StackDivider, Box, Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
@@ -7,7 +7,14 @@ import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 
 function RegisterCard({toast, eventId, eventName, eventDate, eventDesc,
-    myEvents, setMyEvents, now, onOpen, setShowEvent}) {
+    myEvents, setMyEvents, now, onOpen, setShowEvent, setResponse}) {
+
+  useEffect(() => {
+    setResponse(prevResponse => ({
+        ...prevResponse, 
+        eventId: eventId
+    }));
+  }, [])
 
   async function handleLeave() {
     await axios.post(import.meta.env.VITE_API_URL + "/leaveEvent", {
