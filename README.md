@@ -2,7 +2,7 @@
 
 ## Demo
 
-A demo is available [here](https://h4g.vercel.app/).
+A demo is available [here](https://h4g.vercel.app/). Note that the first request might take a while to load because the server is waking up.
 
 ## Description
 
