@@ -1,6 +1,6 @@
 require("dotenv").config();
 const Event = require("../db/schema/Event");
-const { isExistingUserById } = require("../util/db");
+const { isExistingUserById, getUserById } = require("../util/db");
 const jwt = require("jsonwebtoken");
 
 // QRCode generation
@@ -139,6 +139,11 @@ const POSTUpdateHours = async (req, res, next) => {
       return attendee;
     });
     event.save();
+    for (let i = 0; i < hourUpdate.length; i++) {
+      const user = await getUserById(hourUpdate[i].userId);
+      user.hours += hourUpdate[i].hours;
+      await user.save();
+    }
     return res.status(201).json({});
   } catch (err) {
     console.log(err);
