@@ -226,6 +226,37 @@ const POSTLeaveEvent = async (req, res, next) => {
   }
 };
 
+POSTFeedback = async (req, res, next) => {
+  try {
+    const { userId, eventId, feedback } = req.body;
+    if (!(userId && eventId && feedback)) {
+      return res.status(403).json({
+        error: "userId, eventId, feedback is required for feedback",
+      });
+    }
+    if (!(await isValidUser(userId))) {
+      return res.status(403).json({ error: "not authorised" });
+    }
+    const event = await Event.findOne({ _id: eventId });
+    if (event === null) {
+      return res.status(404).json({ error: "event not found" });
+    }
+    if (!eventHasPerson(event, userId)) {
+      return res.status(403).json({ error: "user not registered" });
+    }
+    event.attendees = event.attendees.map((person) => {
+      if (person.userId === userId) {
+        person.feedback = feedback;
+      }
+      return person;
+    });
+    await event.save();
+    return res.status(201).json({});
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+};
+
 module.exports = {
   PUTEvent,
   POSTEvent,
@@ -235,6 +266,7 @@ module.exports = {
   POSTGetMyEvents,
   POSTRegisterEvent,
   POSTLeaveEvent,
+  POSTFeedback,
 };
 
 async function isValidUser(userId) {
