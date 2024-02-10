@@ -131,17 +131,19 @@ const POSTUpdateHours = async (req, res, next) => {
     if (event === null) {
       return res.status(404).json({ error: "event not found" });
     }
+    // This assumes we only update hours for the event once
     event.attendees = event.attendees.map((attendee) => {
-      const user = hourUpdate.find((item) => item.userId === attendee.userId);
-      if (user) {
-        attendee.hours = user.hours;
+      const update = hourUpdate.find((item) => item.userId === attendee.userId);
+      if (update) {
+        attendee.hours = update.hours;
+        update.diff = update.hours - attendee.hours;
       }
       return attendee;
     });
     event.save();
     for (let i = 0; i < hourUpdate.length; i++) {
       const user = await getUserById(hourUpdate[i].userId);
-      user.volunteeringHours += hourUpdate[i].hours;
+      user.volunteeringHours += hourUpdate[i].diff;
       await user.save();
     }
     return res.status(201).json({});
