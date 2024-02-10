@@ -1,13 +1,12 @@
-import React from 'react'
-import { Box } from '@chakra-ui/react'
-import SettingsForm from '../components/settings/settingsForm'
+import React from "react";
+import Settings from "../components/settings/settings";
 
-function Settings(props) {
+function SettingsRoute(props) {
   return (
     <>
-      <SettingsForm toast={props.toast} />
+      <Settings toast={props.toast} />
     </>
-  )
+  );
 }
 
-export default Settings
+export default SettingsRoute;

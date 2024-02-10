@@ -28,12 +28,12 @@ import Tasks from "./routes/tasks";
 import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
 import Attendance from "./routes/attendance";
-import Settings from "./routes/settings";
+import SettingsRoute from "./routes/settings";
 import Eventqr from "./routes/eventqr";
 import Report from "./routes/report";
 import { toast, ToastContainer, ToastContext } from "./ToastContext";
-import store from './app/store'
-import { Provider } from 'react-redux'
+import store from "./app/store";
+import { Provider } from "react-redux";
 
 const chakraTheme = chakraExtendTheme();
 const materialTheme = muiCreateTheme();
@@ -55,19 +55,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <Dashboard toast={toast}/>,
+        element: <Dashboard toast={toast} />,
       },
       {
         path: "/update",
-        element: <Update toast={toast}/>,
+        element: <Update toast={toast} />,
       },
       {
         path: "/attend/:eventId",
-        element: <Attendance toast={toast}/>,
+        element: <Attendance toast={toast} />,
       },
       {
         path: "/settings",
-        element: <Settings toast={toast} />,
+        element: <SettingsRoute toast={toast} />,
       },
       {
         path: "/eventqr/:eventId",
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/report/:eventId",
-        element: <Report toast={toast}/>,
+        element: <Report toast={toast} />,
       },
       {
         path: "/projects",

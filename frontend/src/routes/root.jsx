@@ -30,10 +30,12 @@ function validateToken(token, navFn, personId, personName, toastFn, dispatch) {
       .post(import.meta.env.VITE_API_URL + "/validate", {
         userId: personId,
         token: token,
-      }).then((response) => {
+      })
+      .then((response) => {
         console.log("Admin Status: " + response.data.isAdmin);
-        dispatch(updateAdmin(response.data.isAdmin))})
-        .catch(function (error) {
+        dispatch(updateAdmin(response.data.isAdmin));
+      })
+      .catch(function (error) {
         toastFn({
           title: "Please log in again.",
           description: getErrorMessage(error),
