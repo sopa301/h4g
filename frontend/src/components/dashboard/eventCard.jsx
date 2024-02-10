@@ -42,67 +42,73 @@ isAdmin, setMyEvents, setEvents, events, myEvents, onOpen, setForm, setShowEvent
   }
 
   const dt = DateTime.fromISO(eventDate)
+  const now = DateTime.now()
   const dtStr = dt.toFormat('dd LLL yyyy hh:mm a')
+  const isOver = dt < now
 
   return (
-  <>
-    <Card
-      direction={{ base: 'column', sm: 'row' }}
-      overflow='hidden'
-      variant='outline'
-      shadow='md'
-    >
-    <Image
-      objectFit='cover'
-      maxW={{ base: '100%', sm: '200px' }}
-      src={eventImg}
-      alt='Caffe Latte'
-    />
-    <Stack>
-      <CardBody>
-        <Box pb='4px'>
-          <Heading size='md'>{eventName}</Heading>
-          <Text as='i'>{dtStr}</Text>
-        </Box>
+    <>
+      <Card
+        direction={{ base: 'column', sm: 'row' }}
+        overflow='hidden'
+        variant='outline'
+        shadow='md'
+      >
+      <Image
+        objectFit='cover'
+        maxW={{ base: '100%', sm: '200px' }}
+        src={eventImg}
+        alt='Caffe Latte'
+      />
+      <Stack>
+        <CardBody>
+          <Box pb='4px'>
+            <Heading size='md'>{eventName}</Heading>
+              <Flex>
+                {isOver && <Text as='b' pr="6px">{`( Event Over )`}</Text>}
+                <Text as='i'>{dtStr}</Text>
+              </Flex>
+          </Box>
 
-        <Text noOfLines={5}>
-          {eventDesc}
-        </Text>
-      </CardBody>
+          <Text noOfLines={5}>
+            {eventDesc}
+          </Text>
+        </CardBody>
 
-      <CardFooter>
-        <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-          <Button variant='solid' colorScheme='twitter' onClick={() => {
-            handleForm();
-            setShowEvent(false);
-            onOpen();
-          }}>
-            Sign Up
-          </Button>
-          {isAdmin && (
-            <Button variant='solid' colorScheme='red' onClick={handleDelete}>
-              Delete
+        <CardFooter>
+          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+            <Button variant='solid' colorScheme='twitter' isDisabled={isOver}
+            onClick={() => {
+              handleForm();
+              setShowEvent(false);
+              onOpen();
+            }}>
+              Sign Up
             </Button>
-          )}
-          {isAdmin && (
-            <Link to={`/eventqr/${eventId}`}>
-              <Button variant='solid' colorScheme='orange'>
-                QR Code
+            {isAdmin && (
+              <Button variant='solid' colorScheme='red' onClick={handleDelete}>
+                Delete
               </Button>
-            </Link>
-          )}
-          {isAdmin && (
-            <Link to={`/report/${eventId}`}>
-              <Button variant='solid' colorScheme='purple'>
-                Report
-              </Button>
-            </Link>
-          )}
-        </Grid>
-      </CardFooter>
-    </Stack>
-    </Card>
-  </>  
+            )}
+            {isAdmin && (
+              <Link to={`/eventqr/${eventId}`}>
+                <Button variant='solid' colorScheme='orange'>
+                  QR Code
+                </Button>
+              </Link>
+            )}
+            {isAdmin && (
+              <Link to={`/report/${eventId}`}>
+                <Button variant='solid' colorScheme='purple'>
+                  Report
+                </Button>
+              </Link>
+            )}
+          </Grid>
+        </CardFooter>
+      </Stack>
+      </Card>
+    </>  
     
   )
 }
