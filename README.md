@@ -1,5 +1,9 @@
 # Big At Heart
 
+## Demo
+
+A demo is available [here](https://h4g.vercel.app/).
+
 ## Description
 
 This Volunteer Management System allows volunteers to register, enroll for volunteering opportunities, track attended and upcoming events through a dashboard, and submit feedback. Admins can create new event enrolment forms, note attendance, and track volunteered hours for each event.
@@ -34,12 +38,14 @@ For Admins:
 ## Technologies Used
 
     React.js
-    Redux
     Node.js
     Express.js
     MongoDB
-    HTML/CSS
-    Bootstrap
+    Chakra UI
+    Material UI
+    Git
+    Vercel
+    Render
 
 ## Contributors
 
