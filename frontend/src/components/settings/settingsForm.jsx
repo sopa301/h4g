@@ -19,7 +19,7 @@ import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
-import Certificate from "../Certificate";
+import Certificate from "../certificate";
 
 function SettingsForm(props) {
   const userSettings = props.userSettings;
