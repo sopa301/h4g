@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
@@ -19,12 +19,7 @@ import Root from "./routes/root";
 import Login from "./routes/login";
 import LoginComponent from "./components/login/loginComponent";
 import SignUpComponent from "./components/login/signUpComponent";
-import Projects from "./routes/projects";
-import ProjectPage, {
-  loader as projLoader,
-} from "./components/projects/projectPage";
 import Home from "./routes/home";
-import Tasks from "./routes/tasks";
 import Dashboard from "./routes/dashboard";
 import Update from "./routes/update";
 import Attendance from "./routes/attendance";
@@ -50,10 +45,6 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/tasks",
-        element: <Tasks />,
-      },
-      {
         path: "/dashboard",
         element: <Dashboard toast={toast} />,
       },
@@ -76,20 +67,6 @@ const router = createBrowserRouter([
       {
         path: "/report/:eventId",
         element: <Report toast={toast} />,
-      },
-      {
-        path: "/projects",
-        children: [
-          {
-            path: "",
-            element: <Projects toast={toast} />,
-          },
-          {
-            path: ":projectId",
-            element: <ProjectPage toast={toast} />,
-            loader: projLoader,
-          },
-        ],
       },
     ],
   },
