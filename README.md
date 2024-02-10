@@ -44,6 +44,8 @@ For Admins:
     Chakra UI
     Material UI
     Git
+    Vercel
+    Render
 
 ## Contributors
 
