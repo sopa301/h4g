@@ -8,6 +8,9 @@ export default defineConfig({
     esbuild: {
       loader: { '.js': 'jsx' },
     },
+    rollupOptions: {
+      external: ['jspdf']
+    }
   },
   base: "./",
   test: {
