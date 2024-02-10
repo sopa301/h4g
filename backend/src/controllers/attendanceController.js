@@ -139,7 +139,7 @@ const POSTUpdateHours = async (req, res, next) => {
       }
       return attendee;
     });
-    event.save();
+    await event.save();
     for (let i = 0; i < hourUpdate.length; i++) {
       const user = await getUserById(hourUpdate[i].userId);
       user.volunteeringHours += hourUpdate[i].diff;
