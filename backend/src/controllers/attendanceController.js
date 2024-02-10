@@ -141,7 +141,7 @@ const POSTUpdateHours = async (req, res, next) => {
     event.save();
     for (let i = 0; i < hourUpdate.length; i++) {
       const user = await getUserById(hourUpdate[i].userId);
-      user.hours += hourUpdate[i].hours;
+      user.volunteeringHours += hourUpdate[i].hours;
       await user.save();
     }
     return res.status(201).json({});
