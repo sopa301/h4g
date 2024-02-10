@@ -1,11 +1,11 @@
 import React from 'react'
-import jspdf from 'jspdf/dist/jspdf.umd.js';
+import { jsPDF } from "jspdf";
 import img from '../assets/cert.jpg'
 import { Button } from '@chakra-ui/react';
 
 const generateCertificate = (name, course) => {
    // Create a new jsPDF instance
-  const doc = new jspdf();
+  const doc = new jsPDF();
   const upperCaseName = name.toUpperCase();
   // Add background image
   doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
