@@ -16,16 +16,18 @@ For Volunteers:
 - Enroll for volunteering opportunities
   Access a dashboard to check for attended and upcoming events
 - Submit feedback
+- Generate certificates
 
 For Admins:
 
 - Create new event enrolment forms
 - Note attendance and track volunteered hours for each event
+- View reports of volunteer demographics
 
 ## Installation
 
 - Clone the repository
-- Install dependencies separate in the frontend and backend folders with npm install
+- Install dependencies separately in the frontend and backend folders with npm install
 - Set up the database and environment variables
 - Run the application with `npm start` for the backend, `npm run dev` for the frontend
 
