@@ -1,5 +1,5 @@
 import React from 'react'
-import jspdf from 'jspdf';
+import jspdf from 'jspdf/dist/jspdf.umd.js';
 import img from '../assets/cert.jpg'
 import { Button } from '@chakra-ui/react';
 
