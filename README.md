@@ -38,12 +38,12 @@ For Admins:
 ## Technologies Used
 
     React.js
-    Redux
     Node.js
     Express.js
     MongoDB
-    HTML/CSS
-    Bootstrap
+    Chakra UI
+    Material UI
+    Git
 
 ## Contributors
 
