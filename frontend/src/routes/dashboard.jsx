@@ -139,8 +139,8 @@ export default function Dashboard(props) {
     ).catch(err => console.log(err))
   }
 
-  //Events sorted by date
-  const sortedEvents = events.sort((a, b) => {
+  //Sorting Function
+  const sortingFunc = (a, b) => {
     const aDate = DateTime.fromISO(a.eventDate);
     const bDate = DateTime.fromISO(b.eventDate);
     const isAPast = aDate < now
@@ -154,7 +154,11 @@ export default function Dashboard(props) {
       // Both a and b are either past or not past, sort normally
       return aDate.diff(bDate).milliseconds;
     }
-  })
+  }
+
+  //Events sorted by date
+  const sortedEvents = events.sort((d1, d2) => sortingFunc(d1, d2))
+  const sortedMyEvents = myEvents.sort((d1, d2) => sortingFunc(d1, d2))
 
   return (
     <Box px={{md:'50px', base:'30px'}} pt="10px">
@@ -244,7 +248,7 @@ export default function Dashboard(props) {
         <GridItem>
           <Heading pb='10px'>Events you signed up</Heading>
           <Box maxHeight={{ md:'580px', lg: '600px', xl:'800px'}} overflowY='auto'>
-            {myEvents.length == 0 
+            {sortedMyEvents.length == 0 
             ? <Text fontSize='lg'>{`No Events :(`}</Text>
             : myEvents.map(registerData => (
             <Box key={registerData.eventId} pb="12px">
