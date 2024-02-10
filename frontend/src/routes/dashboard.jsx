@@ -25,7 +25,6 @@ import { DateTime } from 'luxon';
 
 import axios from 'axios';
 
-
 export default function Dashboard(props) {
   const [events, setEvents] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
@@ -34,11 +33,15 @@ export default function Dashboard(props) {
     eventId: '',
     prompts: []
   });
-  const [showEvent, setShowEvent] = useState(false); 
+  const [response, setResponse] = useState({
+    userId: localStorage.getItem('personId'),
+    eventId: "",
+    response: ""
+  })
+  const [showEvent, setShowEvent] = useState(false);
+  const [responses, setResponses] = useState(Array(form.prompts.length).fill(''))
 
   const now = DateTime.now()
-
-  const [responses, setResponses] = useState(Array(form.prompts.length).fill(''))
 
   // states for modal 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -55,6 +58,8 @@ export default function Dashboard(props) {
   useEffect(() => {
     setResponses(Array(form.prompts.length).fill(''))
   }, [form])
+
+  console.log(response)
 
   const isAdmin = useSelector(state => state.admin.value) // this is to get the global state from redux
 
@@ -117,9 +122,39 @@ export default function Dashboard(props) {
   return error;
   }
 
-  function sendFeedback(feedback) {
-    return feedback
+  async function sendFeedback() {
+    await axios.post(import.meta.env.VITE_API_URL + "/feedback", {
+      userId: response.userId,
+      eventId: response.eventId,
+      feedback: response.response
+    })
+      .then(
+        useToast({
+        title: "Successful feedback",
+        description: "Feedback sent",
+        status: 'success',
+        duration: 1000,
+        isClosable: true
+      })
+    ).catch(err => console.log(err))
   }
+
+  //Events sorted by date
+  const sortedEvents = events.sort((a, b) => {
+    const aDate = DateTime.fromISO(a.eventDate);
+    const bDate = DateTime.fromISO(b.eventDate);
+    const isAPast = aDate < now
+    const isBPast = bDate < now 
+
+    if (isAPast && !isBPast) {
+      return 1; // a is past, b is not, so a should come after b
+    } else if (!isAPast && isBPast) {
+      return -1; // b is past, a is not, so b should come after a
+    } else {
+      // Both a and b are either past or not past, sort normally
+      return aDate.diff(bDate).milliseconds;
+    }
+  })
 
   return (
     <Box px={{md:'50px', base:'30px'}} pt="10px">
@@ -141,7 +176,10 @@ export default function Dashboard(props) {
                     isInvalid={form.errors.feedback && form.touched.feedback}
                     pb='10px'
                   >
-                    <Textarea {...field} resize="vertical" placeholder="feedback">
+                  <Textarea value={response.response} onChange={e => setResponse(prevResponse => ({
+                    ...prevResponse, 
+                    response: e.target.value
+                  }))} resize="vertical" placeholder="feedback">
                     </Textarea>
                     <FormErrorMessage>{form.errors.feedback}</FormErrorMessage>
                   </FormControl>
@@ -150,7 +188,7 @@ export default function Dashboard(props) {
               </Formik>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='teal' mr={3}>Submit</Button>
+              <Button colorScheme='teal' mr={3} onClick={sendFeedback}>Submit</Button>
               <Button colorScheme='twitter' onClick={onClose}>
                 Close
               </Button>
@@ -188,7 +226,7 @@ export default function Dashboard(props) {
         <GridItem>
           <Heading pb='10px'>Upcoming activities</Heading>
           <Box maxHeight={{ md:'580px', lg: '600px', xl:'800px'}} overflowY='auto'>
-          {events.map(eventData => (
+          {sortedEvents.map(eventData => (
             <Box key={eventData.eventId} pb="12px">
               <EventCard key={eventData.eventId} {...eventData} toast={props.toast} 
               isAdmin={isAdmin} 
@@ -212,7 +250,7 @@ export default function Dashboard(props) {
             <Box key={registerData.eventId} pb="12px">
               <RegisterCard key={registerData.eventId} {...registerData} toast={props.toast}
                   myEvents={myEvents} setMyEvents={setMyEvents} now={now} 
-                  onOpen={onOpen} setShowEvent={setShowEvent}/>
+                  onOpen={onOpen} setShowEvent={setShowEvent} setResponse={setResponse}/>
             </Box>
             ))} 
           </Box>

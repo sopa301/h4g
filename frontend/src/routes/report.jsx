@@ -70,8 +70,6 @@ function Report() {
     setUpdateHours(newHours)
   }
 
-  console.log(updateHours)
-
   const filteredAttendees = report.attendees.filter(attendee =>
     attendee.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
