@@ -11,7 +11,7 @@ export default function LoginComponent(props) {
       <Heading>Login</Heading>
       <br />
       <LoginForm toast={toast} />
-      <Text>
+      <Text mt='2'>
         Don't have an account?{" "}
         <Link to={"./signup"} style={{ color: "#0CC0DF" }}>
           Sign up now!
