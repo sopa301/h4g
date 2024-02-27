@@ -3,6 +3,7 @@
 ## Demo
 
 A demo is available [here](https://h4g.vercel.app/). Note that the first request might take a while to load because the server is waking up.
+To get a quick summary of the project, please check out our [devpost](https://devpost.com/software/big-at-heart-mcdr73?ref_content=my-projects-tab&ref_feature=my_projects).
 
 ## Description
 
